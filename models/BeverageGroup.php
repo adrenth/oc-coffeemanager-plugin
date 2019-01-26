@@ -28,10 +28,13 @@ class BeverageGroup extends Model
      */
     protected $guarded = [];
 
+    /**
+     * {@inheritdoc}
+     */
     public $hasMany = [
         'beverages' => [
             Beverage::class,
             'key' => 'group_id',
-        ]
+        ],
     ];
 }

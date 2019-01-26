@@ -29,6 +29,9 @@ class Group extends Model
      */
     protected $guarded = [];
 
+    /**
+     * {@inheritdoc}
+     */
     public $belongsTo = [
         'round' => [
             Round::class,

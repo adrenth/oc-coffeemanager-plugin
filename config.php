@@ -9,7 +9,7 @@ return [
         'app_id' => env('COFFEE_MANAGER_PUSHER_APP_ID'),
         'options' => [
             'cluster' => env('COFFEE_MANAGER_PUSHER_CLUSTER', 'eu'),
-            'useTLS' => true
-        ]
-    ]
+            'useTLS' => true,
+        ],
+    ],
 ];

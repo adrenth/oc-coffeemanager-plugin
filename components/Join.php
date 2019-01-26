@@ -7,9 +7,9 @@ namespace Adrenth\CoffeeManager\Components;
 use Adrenth\CoffeeManager\Models\Participant;
 use Cms\Classes\ComponentBase;
 use Cms\Classes\Page;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Session\SessionManager;
 use Illuminate\Session\Store;
 use October\Rain\Database\Collection;
 
@@ -43,8 +43,8 @@ class Join extends ComponentBase
     {
         return [
             'clientPage' => [
-                'label' => 'Coffee Manager Client Page'
-            ]
+                'label' => 'Coffee Manager Client Page',
+            ],
         ];
     }
 
@@ -53,7 +53,7 @@ class Join extends ComponentBase
     /**
      * This method is used the first time the component is rendered into the page.
      *
-     * @return void
+     * {@inheritdoc}
      */
     public function onRun(): void
     {
@@ -62,7 +62,7 @@ class Join extends ComponentBase
 
     /**
      * @return RedirectResponse
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws ModelNotFoundException
      */
     public function onJoin(): RedirectResponse
     {
@@ -74,7 +74,7 @@ class Join extends ComponentBase
 
         $participantId = (int) $request->get('participant');
 
-        $participant = Participant::findOrFail($participantId);
+        $participant = Participant::query()->findOrFail($participantId);
 
         $session->put('coffeemanager.participantId', $participant->getKey());
 

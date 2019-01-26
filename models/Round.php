@@ -19,8 +19,8 @@ use October\Rain\Database\Relations\BelongsToMany;
  * @mixin Eloquent
  * @property Group group
  * @property Collection participants
- * @method BelongsToMany participants()
  * @property Participant initiatingParticipant
+ * @method BelongsToMany participants()
  */
 class Round extends Model
 {
@@ -40,10 +40,10 @@ class Round extends Model
     public $belongsTo = [
         'initiatingParticipant' => [
             Participant::class,
-            'key' => 'initiating_participant_id'
+            'key' => 'initiating_participant_id',
         ],
         'group' => [
-            Group::class
+            Group::class,
         ]
     ];
 
@@ -54,7 +54,7 @@ class Round extends Model
         'participants' => [
             Participant::class,
             'pivot' => ['beverage_id'],
-            'table' => 'adrenth_coffeemanager_round_participant'
+            'table' => 'adrenth_coffeemanager_round_participant',
         ]
     ];
 }

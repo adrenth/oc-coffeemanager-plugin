@@ -16,6 +16,8 @@ use October\Rain\Database\Model;
  * @package Adrenth\CoffeeManager\Models
  * @mixin Eloquent
  * @property Group group
+ * @property Beverage defaultBeverage
+ * @property Beverage lastBeverage
  */
 class Participant extends Model
 {

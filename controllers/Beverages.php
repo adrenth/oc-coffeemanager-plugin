@@ -6,7 +6,7 @@ namespace Adrenth\CoffeeManager\Controllers;
 
 use Backend\Behaviors\FormController;
 use Backend\Behaviors\ListController;
-use BackendMenu;
+use Backend\Classes\NavigationManager;
 use Backend\Classes\Controller;
 
 /** @noinspection ClassOverridesFieldOfSuperClassInspection */
@@ -24,8 +24,8 @@ class Beverages extends Controller
 {
     /** {@inheritdoc} */
     public $implement = [
-        'Backend.Behaviors.FormController',
-        'Backend.Behaviors.ListController'
+        FormController::class,
+        ListController::class,
     ];
 
     /** @var string */
@@ -44,6 +44,6 @@ class Beverages extends Controller
     {
         parent::__construct();
 
-        BackendMenu::setContext('Adrenth.CoffeeManager', 'coffeemanager', 'beverages');
+        NavigationManager::instance()->setContext('Adrenth.CoffeeManager', 'coffeemanager', 'beverages');
     }
 }

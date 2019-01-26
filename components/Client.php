@@ -11,11 +11,15 @@ use Adrenth\CoffeeManager\Models\Round;
 use Cms\Classes\CodeBase;
 use Cms\Classes\ComponentBase;
 use Cms\Classes\Page;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Illuminate\Session\Store;
 use October\Rain\Database\Collection;
 use October\Rain\Flash\FlashBag;
 use Pusher\Pusher;
+use Pusher\PusherException;
 
 /**
  * Class Client
@@ -75,12 +79,15 @@ class Client extends ComponentBase
     private $pusher;
 
     /**
+     * @var Redirector
+     */
+    private $redirector;
+
+    /**
      * {@inheritdoc}
      */
-    public function __construct(
-        CodeBase $cmsObject = null,
-        array $properties = []
-    ) {
+    public function __construct(CodeBase $cmsObject = null, array $properties = [])
+    {
         parent::__construct($cmsObject, $properties);
 
         $this->request = resolve(Request::class);
@@ -88,6 +95,7 @@ class Client extends ComponentBase
         $this->config = config('coffeemanager');
         $this->flashBag = resolve(FlashBag::class);
         $this->pusher = resolve(Pusher::class);
+        $this->redirector = resolve(Redirector::class);
     }
 
     /**
@@ -101,18 +109,30 @@ class Client extends ComponentBase
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function defineProperties(): array
+    {
+        return [
+            'joinPage' => [
+                'label' => 'Coffee Manager Join Page',
+            ],
+        ];
+    }
+
     /** @noinspection PhpMissingParentCallCommonInspection */
     /**
      * This method is used the first time the component is rendered into the
      * page.
      *
      * @return mixed
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws ModelNotFoundException
      */
     public function onRun()
     {
         if (!$this->session->has('coffeemanager.participantId')) {
-            return redirect()->to(Page::url($this->property('joinPage')));
+            return $this->redirector->to(Page::url($this->property('joinPage')));
         }
 
         $this->controller->addJs('https://js.pusher.com/4.3/pusher.min.js');
@@ -122,13 +142,11 @@ class Client extends ComponentBase
     }
 
     /**
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws ModelNotFoundException
      */
-    protected function prepareVars()
+    protected function prepareVars(): void
     {
-        $this->participant = Participant::findOrFail(
-            $this->session->get('coffeemanager.participantId')
-        );
+        $this->participant = Participant::query()->findOrFail($this->session->get('coffeemanager.participantId'));
 
         $this->round = $this->participant->group->round;
 
@@ -146,8 +164,8 @@ class Client extends ComponentBase
     }
 
     /**
-     * @throws \Pusher\PusherException
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws PusherException
+     * @throws ModelNotFoundException
      */
     public function onInitiateRound(): array
     {
@@ -167,7 +185,7 @@ class Client extends ComponentBase
         ]);
 
         $this->participant->group->update([
-            'current_round_id' => $round->getKey()
+            'current_round_id' => $round->getKey(),
         ]);
 
         $this->pusher->trigger(
@@ -176,20 +194,20 @@ class Client extends ComponentBase
             [
                 'participant' => $this->participant->getAttribute('name'),
                 'participant_id' => $this->participant->getKey(),
-                'round_id' => $round->getKey()
+                'round_id' => $round->getKey(),
             ]
         );
 
         $this->prepareVars();
 
         return [
-            '#details' => $this->renderPartial($this->alias . '::_details')
+            '#details' => $this->renderPartial($this->alias . '::_details'),
         ];
     }
 
     /**
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
-     * @throws \Pusher\PusherException
+     * @throws ModelNotFoundException
+     * @throws PusherException
      */
     public function onJoinRound(): array
     {
@@ -197,15 +215,13 @@ class Client extends ComponentBase
         $round = Round::query()->findOrFail($this->request->get('round_id'));
 
         /** @var Participant $participant */
-        $participant = Participant::findOrFail(
-            $this->session->get('coffeemanager.participantId')
-        );
+        $participant = Participant::query()->findOrFail($this->session->get('coffeemanager.participantId'));
 
         $round->participants()->add(
             $participant,
             null,
             [
-                'beverage_id' => $this->request->get('beverage_id')
+                'beverage_id' => $this->request->get('beverage_id'),
             ]
         );
 
@@ -215,21 +231,21 @@ class Client extends ComponentBase
             [
                 'participant' => $participant->getAttribute('name'),
                 'participant_id' => $participant->getKey(),
-                'round_id' => $round->getKey()
+                'round_id' => $round->getKey(),
             ]
         );
 
         $this->prepareVars();
 
         return [
-            '#details' => $this->renderPartial($this->alias . '::_details')
+            '#details' => $this->renderPartial($this->alias . '::_details'),
         ];
     }
 
     /**
      * @return array
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
-     * @throws \Pusher\PusherException
+     * @throws ModelNotFoundException
+     * @throws PusherException
      */
     public function onLeaveRound(): array
     {
@@ -237,9 +253,7 @@ class Client extends ComponentBase
         $round = Round::query()->findOrFail($this->request->get('round_id'));
 
         /** @var Participant $participant */
-        $participant = Participant::findOrFail(
-            $this->session->get('coffeemanager.participantId')
-        );
+        $participant = Participant::query()->findOrFail($this->session->get('coffeemanager.participantId'));
 
         $round->participants()->remove($participant);
 
@@ -249,22 +263,22 @@ class Client extends ComponentBase
             [
                 'participant' => $participant->getAttribute('name'),
                 'participant_id' => $participant->getKey(),
-                'round_id' => $round->getKey()
+                'round_id' => $round->getKey(),
             ]
         );
 
         $this->prepareVars();
 
         return [
-            '#details' => $this->renderPartial($this->alias . '::_details')
+            '#details' => $this->renderPartial($this->alias . '::_details'),
         ];
     }
 
     /**
      * @return array
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
-     * @throws \Pusher\PusherException
-     * @throws \Exception
+     * @throws ModelNotFoundException
+     * @throws PusherException
+     * @throws Exception
      */
     public function onCancelRound(): array
     {
@@ -272,10 +286,7 @@ class Client extends ComponentBase
         $round = Round::query()->findOrFail($this->request->get('round_id'));
 
         /** @var Participant $participant */
-        $participant = Participant::findOrFail(
-            $this->session->get('coffeemanager.participantId')
-        );
-
+        $participant = Participant::query()->findOrFail($this->session->get('coffeemanager.participantId'));
         if ($round->initiatingParticipant->getKey() !== $participant->getKey()) {
             return [];
         }
@@ -290,39 +301,27 @@ class Client extends ComponentBase
             [
                 'participant' => $participant->getAttribute('name'),
                 'participant_id' => $participant->getKey(),
-                'round_id' => $round->getKey()
+                'round_id' => $round->getKey(),
             ]
         );
 
         $this->prepareVars();
 
         return [
-            '#details' => $this->renderPartial($this->alias . '::_details')
+            '#details' => $this->renderPartial($this->alias . '::_details'),
         ];
     }
 
     /**
      * @return array
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws ModelNotFoundException
      */
     public function onRefresh(): array
     {
         $this->prepareVars();
 
         return [
-            '#details' => $this->renderPartial($this->alias . '::_details')
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function defineProperties(): array
-    {
-        return [
-            'joinPage' => [
-                'label' => 'Coffee Manager Join Page',
-            ]
+            '#details' => $this->renderPartial($this->alias . '::_details'),
         ];
     }
 }

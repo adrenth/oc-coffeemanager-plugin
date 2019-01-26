@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Adrenth\CoffeeManager\ServiceProviders;
 
+use Illuminate\Contracts\Config\Repository;
+use Illuminate\Contracts\Container\Container;
 use October\Rain\Support\ServiceProvider;
+use Pusher\Pusher;
 
 /**
  * Class CoffeeManager
@@ -25,16 +28,22 @@ class CoffeeManager extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config.php', 'coffeemanager');
     }
 
+    /**
+     * @return void
+     */
     public function register(): void
     {
-        $this->app->singleton(\Pusher\Pusher::class, function () {
-            return new \Pusher\Pusher(
-                config('coffeemanager.pusher.auth_key'),
-                config('coffeemanager.pusher.secret'),
-                config('coffeemanager.pusher.app_id'),
+        $this->app->singleton(Pusher::class, function (Container $container): Pusher {
+            /** @var Repository $config */
+            $config = $container->make(Repository::class);
+
+            return new Pusher(
+                $config->get('coffeemanager.pusher.auth_key'),
+                $config->get('coffeemanager.pusher.secret'),
+                $config->get('coffeemanager.pusher.app_id'),
                 [
-                    'cluster' => config('coffeemanager.pusher.options.cluster'),
-                    'useTLS' => true
+                    'cluster' => $config->get('coffeemanager.pusher.options.cluster'),
+                    'useTLS' => true,
                 ]
             );
         });
