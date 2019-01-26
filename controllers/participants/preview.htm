@@ -1,0 +1,23 @@
+<?php Block::put('breadcrumb') ?>
+    <ul>
+        <li>
+            <a href="<?= $this->actionUrl('index') ?>">
+                <?= e(trans('adrenth.coffeemanager::lang.participants.form.record_name_plural')); ?>
+            </a>
+        </li>
+        <li><?= e($this->pageTitle) ?></li>
+    </ul>
+<?php Block::endPut() ?>
+
+<?php if (!$this->fatalError): ?>
+    <div class="form-preview">
+        <?= $this->formRenderPreview() ?>
+    </div>
+<?php else: ?>
+    <p class="flash-message static error"><?= e($this->fatalError) ?></p>
+    <p>
+        <a href="<?= $this->actionUrl('index') ?>" class="btn btn-default">
+            <?= e(trans('adrenth.coffeemanager::lang.participants.form.return_to_list')) ?>
+        </a>
+    </p>
+<?php endif ?>

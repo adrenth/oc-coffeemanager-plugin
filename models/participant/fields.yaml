@@ -1,0 +1,24 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    name:
+        label: Name
+        span: left
+    group:
+        label: Group
+        type: relation
+        span: left
+    defaultBeverage:
+        label: Default Beverage
+        type: relation
+        span: left
+        emptyOption: '- none -'
+        disabled: true
+    lastBeverage:
+        label: Last Beverage
+        type: relation
+        span: left
+        emptyOption: '- none -'
+        disabled: true

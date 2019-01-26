@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: adrenth.coffeemanager::lang.groups.form.record_name_singular
+
+# Model Form Field configuration
+form: $/adrenth/coffeemanager/models/group/fields.yaml
+
+# Model Class name
+modelClass: Adrenth\CoffeeManager\Models\Group
+
+# Default redirect location
+defaultRedirect: adrenth/coffeemanager/groups
+
+# Create page
+create:
+    title: adrenth.coffeemanager::lang.groups.form.create_title
+    redirect: adrenth/coffeemanager/groups/update/:id
+    redirectClose: adrenth/coffeemanager/groups
+
+# Update page
+update:
+    title: adrenth.coffeemanager::lang.groups.form.edit_title
+    redirect: adrenth/coffeemanager/groups
+    redirectClose: adrenth/coffeemanager/groups
+
+# Preview page
+preview:
+    title: adrenth.coffeemanager::lang.groups.form.preview_title

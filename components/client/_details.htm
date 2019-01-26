@@ -1,0 +1,89 @@
+<h1>{{ __SELF__.participant.group.name }}</h1>
+<p><em>{{ __SELF__.participant.name }}</em></p>
+<hr>
+{% if __SELF__.round %}
+    <h2>Current round</h2>
+
+    <p>Initiator: {{ __SELF__.round.initiatingParticipant.name }}</p>
+    <p>Time left: {{ __SELF__.round.expires_at }}</p>
+
+    <h3>Participants</h3>
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th class="col-sm-6 col-md-4">Participant</th>
+            <th class="col-sm-6 col-md-8">Beverage</th>
+        </tr>
+        </thead>
+        {% for participant in __SELF__.participants %}
+            <tr>
+                <td>{{ participant.name }}</td>
+                <td>{{ __SELF__.beverages[participant.pivot.beverage_id] }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">No participants yet...</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    {% if not __SELF__.participants.contains('id', __SELF__.participant.id) %}
+        <h3>What would you like to drink?</h3>
+        <form data-request="{{ __SELF__ ~ '::onJoinRound' }}"
+              data-request-flash>
+            <input type="hidden" name="round_id" value="{{ __SELF__.round.id }}">
+            <div class="row">
+                <div class="col-sm-6 col-md-10">
+                    <select class="form-control"
+                            name="beverage_id">
+                        {% for beverageGroup in __SELF__.beverageGroups %}
+                            <optgroup label="{{ beverageGroup.name }}">
+                                {% for beverage in beverageGroup.beverages %}
+                                    <option value="{{ beverage.id }}" {% if __SELF__.participant.defaultBeverage.id == beverage.id %} selected{% endif %}>
+                                        {{ beverage.name }}
+                                    </option>
+                                {% endfor %}
+                            </optgroup>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-6 col-md-2">
+                    <button type="submit" class="btn btn-block btn-primary" data-attach-loading>
+                        Join
+                    </button>
+                </div>
+            </div>
+        </form>
+        {% if __SELF__.round.initiatingParticipant.id == __SELF__.participant.id %}
+            <hr>
+            <div class="row">
+                <div class="col-sm-6 col-md-4">
+                    <button class="btn btn-block btn-danger"
+                            data-request="{{ __SELF__ ~ '::onCancelRound' }}"
+                            data-request-data="round_id: {{ __SELF__.round.id }}"
+                            data-attach-loading>
+                        <span class="icon icon-trash"></span> Cancel round
+                    </button>
+                </div>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="row">
+            <div class="col-sm-6 col-md-4">
+                <button class="btn btn-block btn-danger"
+                        data-request="{{ __SELF__ ~ '::onLeaveRound' }}"
+                        data-request-data="round_id: {{ __SELF__.round.id }}"
+                        data-attach-loading>
+                    Leave round
+                </button>
+            </div>
+        </div>
+    {% endif %}
+{% else %}
+    <button class="btn btn-primary"
+            data-request="{{ __SELF__ ~ '::onInitiateRound' }}"
+            data-request-flash
+            data-attach-loading>
+        <span class="icon icon-coffee"></span> Initiate new Coffee Round
+    </button>
+{% endif %}

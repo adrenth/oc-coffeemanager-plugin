@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: adrenth.coffeemanager::lang.beverages.form.record_name_singular
+
+# Model Form Field configuration
+form: $/adrenth/coffeemanager/models/beverage/fields.yaml
+
+# Model Class name
+modelClass: Adrenth\CoffeeManager\Models\Beverage
+
+# Default redirect location
+defaultRedirect: adrenth/coffeemanager/beverages
+
+# Create page
+create:
+    title: adrenth.coffeemanager::lang.beverages.form.create_title
+    redirect: adrenth/coffeemanager/beverages/update/:id
+    redirectClose: adrenth/coffeemanager/beverages
+
+# Update page
+update:
+    title: adrenth.coffeemanager::lang.beverages.form.edit_title
+    redirect: adrenth/coffeemanager/beverages
+    redirectClose: adrenth/coffeemanager/beverages
+
+# Preview page
+preview:
+    title: adrenth.coffeemanager::lang.beverages.form.preview_title

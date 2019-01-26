@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: adrenth.coffeemanager::lang.participants.form.record_name_singular
+
+# Model Form Field configuration
+form: $/adrenth/coffeemanager/models/participant/fields.yaml
+
+# Model Class name
+modelClass: Adrenth\CoffeeManager\Models\Participant
+
+# Default redirect location
+defaultRedirect: adrenth/coffeemanager/participants
+
+# Create page
+create:
+    title: adrenth.coffeemanager::lang.participants.form.create_title
+    redirect: adrenth/coffeemanager/participants/update/:id
+    redirectClose: adrenth/coffeemanager/participants
+
+# Update page
+update:
+    title: adrenth.coffeemanager::lang.participants.form.edit_title
+    redirect: adrenth/coffeemanager/participants
+    redirectClose: adrenth/coffeemanager/participants
+
+# Preview page
+preview:
+    title: adrenth.coffeemanager::lang.participants.form.preview_title

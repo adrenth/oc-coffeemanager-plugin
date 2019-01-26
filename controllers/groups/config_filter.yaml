@@ -1,0 +1,44 @@
+# ===================================
+# Filter Scope Definitions
+# ===================================
+
+# THIS IS AN EXAMPLE FILE; YOU CAN SAFELY REMOVE IT'S CONTENTS
+# Documentation: http://octobercms.com/docs/backend/lists#adding-filters
+
+scopes:
+    category:
+        label: adrenth.coffeemanager::lang.groups.category
+        modelClass: Acme\Blog\Models\Category
+        conditions: category_id in (:filtered)
+        nameFrom: name
+
+    status:
+        label: adrenth.coffeemanager::lang.groups.status
+        type: group
+        conditions: status in (:filtered)
+        options:
+            pending: adrenth.coffeemanager::lang.groups.pending
+            active: adrenth.coffeemanager::lang.groups.active
+            closed: adrenth.coffeemanager::lang.groups.closed
+
+    published:
+        label: adrenth.coffeemanager::lang.groups.hide_published
+        type: checkbox
+        conditions: is_published <> true
+
+    approved:
+        label: adrenth.coffeemanager::lang.groups.approved
+        type: switch
+        conditions:
+            - is_approved <> true
+            - is_approved = true
+
+    created_at:
+        label: adrenth.coffeemanager::lang.groups.date
+        type: date
+        conditions: created_at >= ':filtered'
+
+    published_at:
+        label: adrenth.coffeemanager::lang.groups.date
+        type: daterange
+        conditions: created_at >= ':after' AND created_at <= ':before'

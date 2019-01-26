@@ -1,0 +1,32 @@
+<h1>{{ __SELF__.group.name }}</h1>
+
+<div id="details">
+    {% partial __SELF__ ~ '::_details' %}
+</div>
+
+<script>
+    var COFFEE_MANAGER_PUSHER_AUTH_KEY = '{{ __SELF__.config.pusher.auth_key }}';
+    var COFFEE_MANAGER_PUSHER_CLUSTER = '{{ __SELF__.config.pusher.options.cluster }}';
+    var COFFEE_MANAGER_PUSHER_CHANNEL = 'group-{{ __SELF__.participant.group.id }}';
+    var COFFEE_MANAGER_PARTICIPANT_ID = {{ __SELF__.participant.id }};
+
+    // Let's check if the browser supports notifications
+    if (!("Notification" in window)) {
+        alert("This browser does not support desktop notification");
+    }
+
+    // Let's check whether notification permissions have already been granted
+    else if (Notification.permission === "granted") {
+        // If it's okay let's create a notification
+        new Notification('Welcome to the Coffee Manager!');
+    }
+    // Otherwise, we need to ask the user for permission
+    else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(function (permission) {
+            // If the user accepts, let's create a notification
+            if (permission === "granted") {
+                new Notification('Welcome to the Coffee Manager!');
+            }
+        });
+    }
+</script>

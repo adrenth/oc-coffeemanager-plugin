@@ -1,0 +1,29 @@
+# ===================================
+#  List Column Definitions
+# ===================================
+
+columns:
+    name:
+        label: Name
+        searchable: true
+    group:
+        label: Group
+        searchable: true
+        relation: group
+        select: name
+    defaultBeverage:
+        label: Default Beverage
+        searchable: true
+        relation: defaultBeverage
+        select: name
+        default: '- none -'
+    lasttBeverage:
+        label: Last Beverage
+        searchable: true
+        relation: lastBeverage
+        select: name
+        default: '- none -'
+    id:
+        label: ID
+        searchable: true
+        width: '100px'
