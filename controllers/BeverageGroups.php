@@ -34,8 +34,8 @@ class BeverageGroups extends Controller
     /** @var string */
     public $listConfig = 'config_list.yaml';
 
-    // /** {@inheritdoc} */
-    // public $requiredPermissions = ['adrenth.coffeemanager.'];
+     /** {@inheritdoc} */
+     public $requiredPermissions = ['adrenth.coffeemanager.access_beverage_groups'];
 
     /**
      * {@inheritdoc}

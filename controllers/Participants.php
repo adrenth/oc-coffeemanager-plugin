@@ -34,8 +34,8 @@ class Participants extends Controller
     /** @var string */
     public $listConfig = 'config_list.yaml';
 
-    // /** {@inheritdoc} */
-    // public $requiredPermissions = ['adrenth.coffeemanager.'];
+     /** {@inheritdoc} */
+     public $requiredPermissions = ['adrenth.coffeemanager.access_participants'];
 
     /**
      * {@inheritdoc}
