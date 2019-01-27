@@ -1,10 +1,8 @@
-<h2>Join Coffee Group</h2>
-
 <form class="form-horizontal"
       data-request="{{ __SELF__ ~ '::onJoin' }}">
     <div class="form-group">
         <label class="control-label">
-            Select participant:
+            Join Coffee Group as participant:
         </label>
         <select class="form-control" name="participant">
             {% for participant in __SELF__.participants %}

@@ -13,6 +13,7 @@ use Cms\Classes\ComponentBase;
 use Cms\Classes\Page;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Session\Store;
@@ -275,6 +276,16 @@ class Client extends ComponentBase
         return [
             '#details' => $this->renderPartial($this->alias . '::_details'),
         ];
+    }
+
+    /**
+     * @return RedirectResponse
+     */
+    public function onLeave(): RedirectResponse
+    {
+        $this->session->forget('coffeemanager.participantId');
+
+        return $this->redirector->to(Page::url($this->property('joinPage')));
     }
 
     /**

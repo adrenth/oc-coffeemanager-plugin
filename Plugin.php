@@ -108,7 +108,7 @@ class Plugin extends PluginBase
             'coffeemanager' => [
                 'label' => 'Coffee Manager',
                 'url' => $backendHelper->url('adrenth/coffeemanager/groups'),
-                'icon' => 'icon-coffee',
+                'iconSvg' => '/plugins/adrenth/coffeemanager/assets/images/coffee.svg',
                 'permissions' => ['adrenth.coffeemanager.*'],
                 'order' => 500,
                 'sideMenu' => [
