@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Adrenth\CoffeeManager\Console;
 
 use Adrenth\CoffeeManager\Models;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use InvalidArgumentException;
 use Pusher\Pusher;
@@ -33,10 +34,10 @@ class ServeRounds extends Command
      * @throws PusherException
      * @throws InvalidArgumentException
      */
-    public function handle(Pusher $pusher)
+    public function handle(Pusher $pusher): void
     {
         $rounds = Models\Round::query()
-            ->where('expires_at', '<=', now())
+            ->where('expires_at', '<=', Carbon::now())
             ->whereNull('designated_participant_id')
             ->where('is_finished', '=', false)
             ->get();
@@ -50,21 +51,26 @@ class ServeRounds extends Command
                 $round->update([
                     'is_finished' => true,
                 ]);
+
                 $pusher->trigger(
                     'group-' . $round->group->getKey(),
                     'round-expired',
                     []
                 );
+
                 continue;
             }
+
             /*
              * Choose a designated participant
              */
             /** @var Models\Participant $participant */
             $participant = $round->participants->random(1)->first();
+
             $round->update([
                 'designated_participant_id' => $participant->getKey(),
             ]);
+
             $pusher->trigger(
                 'group-' . $round->group->getKey(),
                 'participant-chosen',

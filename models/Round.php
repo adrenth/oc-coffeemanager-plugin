@@ -49,7 +49,7 @@ class Round extends Model
         ],
         'group' => [
             Group::class,
-        ]
+        ],
     ];
 
     /**
@@ -60,6 +60,6 @@ class Round extends Model
             Participant::class,
             'pivot' => ['beverage_id'],
             'table' => 'adrenth_coffeemanager_round_participant',
-        ]
+        ],
     ];
 }

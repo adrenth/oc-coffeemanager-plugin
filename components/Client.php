@@ -8,7 +8,6 @@ use Adrenth\CoffeeManager\Models\Beverage;
 use Adrenth\CoffeeManager\Models\BeverageGroup;
 use Adrenth\CoffeeManager\Models\Participant;
 use Adrenth\CoffeeManager\Models\Round;
-use Cms\Classes\CodeBase;
 use Cms\Classes\ComponentBase;
 use Cms\Classes\Page;
 use Exception;
@@ -87,10 +86,8 @@ class Client extends ComponentBase
     /**
      * {@inheritdoc}
      */
-    public function __construct(CodeBase $cmsObject = null, array $properties = [])
+    public function init(): void
     {
-        parent::__construct($cmsObject, $properties);
-
         $this->request = resolve(Request::class);
         $this->session = resolve(Store::class);
         $this->config = config('coffeemanager');

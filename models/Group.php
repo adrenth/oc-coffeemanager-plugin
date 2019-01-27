@@ -36,6 +36,6 @@ class Group extends Model
         'round' => [
             Round::class,
             'key' => 'current_round_id',
-        ]
+        ],
     ];
 }

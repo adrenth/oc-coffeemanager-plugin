@@ -6,7 +6,6 @@ namespace Adrenth\CoffeeManager;
 
 use Adrenth\CoffeeManager\ServiceProviders\CoffeeManager;
 use Backend\Helpers\Backend;
-use Illuminate\Console\Scheduling\Schedule;
 use System\Classes\PluginBase;
 use Adrenth\CoffeeManager\Components;
 use Adrenth\CoffeeManager\Console;
@@ -29,10 +28,6 @@ class Plugin extends PluginBase
             'icon' => 'icon-coffee',
             'homepage' => 'http://github.com/adrenth',
         ];
-    }
-
-    public function boot(): void
-    {
     }
 
     /**
