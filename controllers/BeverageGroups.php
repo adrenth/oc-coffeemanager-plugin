@@ -44,6 +44,6 @@ class BeverageGroups extends Controller
     {
         parent::__construct();
 
-        NavigationManager::instance()->setContext('Adrenth.CoffeeManager', 'coffeemanager', 'beveragegroups');
+        NavigationManager::instance()->setContext('Adrenth.CoffeeManager', 'coffeemanager', 'beverage-groups');
     }
 }
