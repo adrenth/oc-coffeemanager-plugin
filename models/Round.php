@@ -20,6 +20,7 @@ use October\Rain\Database\Relations\BelongsToMany;
  * @property Group group
  * @property Collection participants
  * @property Participant initiatingParticipant
+ * @property Participant designatedParticipant
  * @method BelongsToMany participants()
  */
 class Round extends Model
@@ -41,6 +42,10 @@ class Round extends Model
         'initiatingParticipant' => [
             Participant::class,
             'key' => 'initiating_participant_id',
+        ],
+        'designatedParticipant' => [
+            Participant::class,
+            'key' => 'designated_participant_id',
         ],
         'group' => [
             Group::class,

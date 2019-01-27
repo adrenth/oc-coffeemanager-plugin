@@ -146,7 +146,8 @@ class Client extends ComponentBase
      */
     protected function prepareVars(): void
     {
-        $this->participant = Participant::query()->findOrFail($this->session->get('coffeemanager.participantId'));
+        $this->participant = Participant::query()
+            ->findOrFail($this->session->get('coffeemanager.participantId'));
 
         $this->round = $this->participant->group->round;
 
@@ -215,7 +216,8 @@ class Client extends ComponentBase
         $round = Round::query()->findOrFail($this->request->get('round_id'));
 
         /** @var Participant $participant */
-        $participant = Participant::query()->findOrFail($this->session->get('coffeemanager.participantId'));
+        $participant = Participant::query()
+            ->findOrFail($this->session->get('coffeemanager.participantId'));
 
         $round->participants()->add(
             $participant,
@@ -253,7 +255,8 @@ class Client extends ComponentBase
         $round = Round::query()->findOrFail($this->request->get('round_id'));
 
         /** @var Participant $participant */
-        $participant = Participant::query()->findOrFail($this->session->get('coffeemanager.participantId'));
+        $participant = Participant::query()
+            ->findOrFail($this->session->get('coffeemanager.participantId'));
 
         $round->participants()->remove($participant);
 
@@ -286,8 +289,11 @@ class Client extends ComponentBase
         $round = Round::query()->findOrFail($this->request->get('round_id'));
 
         /** @var Participant $participant */
-        $participant = Participant::query()->findOrFail($this->session->get('coffeemanager.participantId'));
+        $participant = Participant::query()
+            ->findOrFail($this->session->get('coffeemanager.participantId'));
+
         if ($round->initiatingParticipant->getKey() !== $participant->getKey()) {
+            $this->flashBag->error('You are not allowed to do that!');
             return [];
         }
 
@@ -306,6 +312,57 @@ class Client extends ComponentBase
         );
 
         $this->prepareVars();
+
+        return [
+            '#details' => $this->renderPartial($this->alias . '::_details'),
+        ];
+    }
+
+    /**
+     * @return array
+     * @throws ModelNotFoundException
+     * @throws PusherException
+     */
+    public function onFinishRound(): array
+    {
+        /** @var Round $round */
+        $round = Round::query()->findOrFail($this->request->get('round_id'));
+
+        /** @var Participant $participant */
+        $participant = Participant::query()
+            ->findOrFail($this->session->get('coffeemanager.participantId'));
+
+        if ($round->designatedParticipant->getKey() !== $participant->getKey()) {
+            $this->flashBag->error('You are not allowed to do that!');
+            return [];
+        }
+
+        $round->update([
+            'is_finished' => true,
+        ]);
+
+        $participant->group->update(['current_round_id' => null]);
+
+        $participant->update([
+            'score' => $participant->getAttribute('score') + 1,
+        ]);
+
+        /** @var Participant $roundParticipant */
+        foreach ($round->participants as $roundParticipant) {
+            $roundParticipant->update([
+                'last_beverage_id' => $roundParticipant->pivot->beverage_id
+            ]);
+        }
+
+        $this->pusher->trigger(
+            'group-' . $round->group->getKey(),
+            'round-finished',
+            [
+                'participant' => $participant->getAttribute('name'),
+                'participant_id' => $participant->getKey(),
+                'round_id' => $round->getKey(),
+            ]
+        );
 
         return [
             '#details' => $this->renderPartial($this->alias . '::_details'),

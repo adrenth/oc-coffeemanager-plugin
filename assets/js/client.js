@@ -37,6 +37,27 @@ jQuery(document).ready(function () {
         refreshPartial();
     });
 
+    channel.bind('round-expired', function () {
+        showNotification('Coffee Round is expired.');
+        refreshPartial();
+    });
+
+    channel.bind('round-finished', function (data) {
+        if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID) {
+            showNotification('Coffee Round finished by ' + data.participant + '.');
+        }
+        refreshPartial();
+    });
+
+    channel.bind('participant-chosen', function (data) {
+        if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID) {
+            showNotification(data.participant + ' will get your beverage.');
+        } else {
+            showNotification('You\'re the designated participant!');
+        }
+        refreshPartial();
+    });
+
     function showNotification(body) {
         var n = new Notification('Coffee Manager', {
             icon: 'https://october-plugin-development.localhost/themes/demo/assets/images/october.png',
