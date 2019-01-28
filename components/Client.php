@@ -243,6 +243,7 @@ class Client extends ComponentBase
             [
                 'participant' => $participant->getAttribute('name'),
                 'participant_id' => $participant->getKey(),
+                'participants' => $round->participants->pluck('id'),
                 'round_id' => $round->getKey(),
             ]
         );
@@ -250,6 +251,48 @@ class Client extends ComponentBase
         $this->prepareVars();
 
         return [
+            '#session-actions' => $this->renderPartial($this->alias . '::_session-actions'),
+            '#round-details' => $this->renderPartial($this->alias . '::_round-details'),
+            '#round-join' => $this->renderPartial($this->alias . '::_round-join'),
+        ];
+    }
+
+    /**
+     * @return array
+     * @throws ModelNotFoundException
+     * @throws PusherException
+     */
+    public function onServeRound(): array
+    {
+        /** @var Round $round */
+        $round = Round::query()
+            ->where('id', $this->request->get('round_id'))
+            ->whereNull('designated_participant_id')
+            ->firstOrFail();
+
+        /** @var Participant $participant */
+        $participant = Participant::query()
+            ->findOrFail($this->session->get('coffeemanager.participantId'));
+
+        $round->update([
+            'designated_participant_id' => $participant->getKey(),
+        ]);
+
+        $this->pusher->trigger(
+            'group-' . $round->group->getKey(),
+            'participant-chosen',
+            [
+                'participant' => $participant->getAttribute('name'),
+                'participant_id' => $participant->getKey(),
+                'participants' => $round->participants->pluck('id'),
+                'round_id' => $round->getKey(),
+            ]
+        );
+
+        $this->prepareVars();
+
+        return [
+            '#session-actions' => $this->renderPartial($this->alias . '::_session-actions'),
             '#round-details' => $this->renderPartial($this->alias . '::_round-details'),
             '#round-join' => $this->renderPartial($this->alias . '::_round-join'),
         ];
@@ -277,6 +320,7 @@ class Client extends ComponentBase
             [
                 'participant' => $participant->getAttribute('name'),
                 'participant_id' => $participant->getKey(),
+                'participants' => $round->participants->pluck('id'),
                 'round_id' => $round->getKey(),
             ]
         );
@@ -329,6 +373,7 @@ class Client extends ComponentBase
             [
                 'participant' => $participant->getAttribute('name'),
                 'participant_id' => $participant->getKey(),
+                'participants' => $round->participants->pluck('id'),
                 'round_id' => $round->getKey(),
             ]
         );
@@ -384,12 +429,15 @@ class Client extends ComponentBase
             [
                 'participant' => $participant->getAttribute('name'),
                 'participant_id' => $participant->getKey(),
+                'participants' => $round->participants->pluck('id'),
                 'round_id' => $round->getKey(),
             ]
         );
 
+        $this->prepareVars();
+
         return [
-            '#participant-details' => $this->renderPartial($this->alias . '::participant-details'),
+            '#participant-details' => $this->renderPartial($this->alias . '::_participant-details'),
             '#round-details' => $this->renderPartial($this->alias . '::_round-details'),
             '#round-join' => $this->renderPartial($this->alias . '::_round-join'),
         ];
