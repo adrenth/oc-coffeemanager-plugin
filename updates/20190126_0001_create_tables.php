@@ -104,6 +104,7 @@ class CreateBeveragesTable extends Migration
             $table->unsignedInteger('round_id');
             $table->unsignedInteger('participant_id');
             $table->unsignedInteger('beverage_id');
+            $table->timestamps();
 
             $table->foreign('round_id', 'round_participant_round')
                 ->references('id')

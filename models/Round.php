@@ -58,7 +58,11 @@ class Round extends Model
     public $belongsToMany = [
         'participants' => [
             Participant::class,
-            'pivot' => ['beverage_id'],
+            'pivot' => [
+                'beverage_id',
+                'updated_at',
+                'created_at',
+            ],
             'table' => 'adrenth_coffeemanager_round_participant',
         ],
     ];
