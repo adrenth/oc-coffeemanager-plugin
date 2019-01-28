@@ -1,0 +1,13 @@
+# ===================================
+#  Relation Behavior Config
+# ===================================
+
+properties:
+    label: Properties
+    view:
+        list: $/adrenth/coffeemanager/models/beverageproperty/columns.yaml
+        toolbarButtons: create|delete
+    manage:
+        form: $/adrenth/coffeemanager/models/beverageproperty/fields.yaml
+        recordsPerPage: 10
+    emptyMessage: backend::lang.list.no_records

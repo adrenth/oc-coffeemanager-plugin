@@ -10,3 +10,10 @@ fields:
         label: Group
         type: relation
         span: left
+
+tabs:
+    fields:
+        properties:
+            type: partial
+            tab: Properties
+            context: update

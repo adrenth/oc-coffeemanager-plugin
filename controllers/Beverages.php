@@ -6,6 +6,7 @@ namespace Adrenth\CoffeeManager\Controllers;
 
 use Backend\Behaviors\FormController;
 use Backend\Behaviors\ListController;
+use Backend\Behaviors\RelationController;
 use Backend\Classes\NavigationManager;
 use Backend\Classes\Controller;
 
@@ -17,8 +18,9 @@ use Backend\Classes\Controller;
  * Beverages Back-end Controller.
  *
  * @package Adrenth\CoffeeManager\Controllers
- * @mixin ListController
  * @mixin FormController
+ * @mixin ListController
+ * @mixin RelationController
  */
 class Beverages extends Controller
 {
@@ -26,6 +28,7 @@ class Beverages extends Controller
     public $implement = [
         FormController::class,
         ListController::class,
+        RelationController::class,
     ];
 
     /** @var string */
@@ -34,7 +37,10 @@ class Beverages extends Controller
     /** @var string */
     public $listConfig = 'config_list.yaml';
 
-     /** {@inheritdoc} */
+    /** @var string */
+    public $relationConfig = 'config_relation.yaml';
+
+    /** {@inheritdoc} */
      public $requiredPermissions = ['adrenth.coffeemanager.access_beverages'];
 
     /**
