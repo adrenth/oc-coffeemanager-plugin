@@ -62,4 +62,11 @@ class Round extends Model
             'table' => 'adrenth_coffeemanager_round_participant',
         ],
     ];
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $dates = [
+        'expires_at'
+    ];
 }

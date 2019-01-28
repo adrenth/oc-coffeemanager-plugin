@@ -5,7 +5,7 @@
     <h4>Current round</h4>
 
     <p>Initiator: {{ __SELF__.round.initiatingParticipant.name }}</p>
-    <p>Expires at: {{ __SELF__.round.expires_at|date('H:i:s') }}</p>
+    <p>Expires at: {{ __SELF__.round.expires_at.format('H:i') }}</p>
     <p>Is finished: {{ __SELF__.round.is_finished ? 'Yes' : 'No' }}</p>
 
     {% if __SELF__.round.designatedParticipant %}
