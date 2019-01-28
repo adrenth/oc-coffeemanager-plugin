@@ -60,9 +60,12 @@ jQuery(document).ready(function () {
 
     function showNotification(body) {
         var n = new Notification('Coffee Manager', {
-            icon: 'https://october-plugin-development.localhost/themes/demo/assets/images/october.png',
             body: body
         });
+
+        n.onclick = function () {
+            $('form').focus();
+        }
     }
 
     function refreshPartial() {
