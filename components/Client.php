@@ -250,6 +250,7 @@ class Client extends ComponentBase
         $this->prepareVars();
 
         return [
+            '#session-actions' => $this->renderPartial($this->alias . '::_session-actions'),
             '#round-details' => $this->renderPartial($this->alias . '::_round-details'),
             '#round-join' => $this->renderPartial($this->alias . '::_round-join'),
         ];
@@ -289,7 +290,9 @@ class Client extends ComponentBase
         $this->prepareVars();
 
         return [
-            '#details' => $this->renderPartial($this->alias . '::_details'),
+            '#session-actions' => $this->renderPartial($this->alias . '::_session-actions'),
+            '#round-details' => $this->renderPartial($this->alias . '::_round-details'),
+            '#round-join' => $this->renderPartial($this->alias . '::_round-join'),
         ];
     }
 
@@ -395,6 +398,7 @@ class Client extends ComponentBase
             ->findOrFail($this->session->get('coffeemanager.participantId'));
 
         if ($round->designatedParticipant->getKey() !== $participant->getKey()) {
+            dd(1);
             $this->flashBag->error('You are not allowed to do that!');
             return [];
         }
@@ -426,8 +430,10 @@ class Client extends ComponentBase
             ]
         );
 
+        $this->prepareVars();
+
         return [
-            '#participant-details' => $this->renderPartial($this->alias . '::participant-details'),
+            '#participant-details' => $this->renderPartial($this->alias . '::_participant-details'),
             '#round-details' => $this->renderPartial($this->alias . '::_round-details'),
             '#round-join' => $this->renderPartial($this->alias . '::_round-join'),
         ];

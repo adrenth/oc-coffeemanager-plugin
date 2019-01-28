@@ -46,7 +46,7 @@ jQuery(document).ready(function () {
         if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID) {
             showNotification('Coffee Round finished by ' + data.participant + '.');
         }
-        refreshPartials('_session-actions,_participant-details_round-details,_round-join');
+        refreshPartials('_session-actions,_participant-details,_round-details,_round-join');
     });
 
     channel.bind('participant-chosen', function (data) {
