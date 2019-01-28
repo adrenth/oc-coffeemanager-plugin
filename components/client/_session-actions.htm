@@ -1,0 +1,14 @@
+{% if not __SELF__.round %}
+    <button class="btn btn-primary pull-right"
+            data-request="{{ __SELF__ ~ '::onInitiateRound' }}"
+            data-request-flash
+            data-attach-loading>
+        <span class="icon icon-coffee"></span> Initiate new Coffee Round
+    </button>
+    <button class="btn btn-default pull-left"
+            data-request="{{ __SELF__ ~ '::onLeave' }}"
+            data-request-flash
+            data-request-loading>
+        <span class="icon icon-angle-left"></span> Leave
+    </button>
+{% endif %}

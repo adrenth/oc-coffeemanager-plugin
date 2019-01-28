@@ -1,0 +1,72 @@
+{% if __SELF__.round %}
+    <h4>Current round</h4>
+
+    <p>Initiator: {{ __SELF__.round.initiatingParticipant.name }}</p>
+    <p>Expires at: {{ __SELF__.round.expires_at.format('H:i') }}</p>
+    <p>Is finished: {{ __SELF__.round.is_finished ? 'Yes' : 'No' }}</p>
+
+    {% if __SELF__.round.designatedParticipant %}
+        {% if __SELF__.round.designatedParticipant.id == __SELF__.participant.id %}
+            <p>Designated participant: You</p>
+        {% else %}
+            <p>Designated participant: {{ __SELF__.round.designatedParticipant.name }}</p>
+        {% endif %}
+    {% endif %}
+
+    {% if __SELF__.round.initiatingParticipant.id == __SELF__.participant.id %}
+        <button class="btn btn-sm btn-primary"
+                data-request="{{ __SELF__ ~ '::onCancelRound' }}"
+                data-request-data="round_id: {{ __SELF__.round.id }}"
+                data-attach-loading>
+            <span class="icon icon-ban-circle"></span> Cancel round
+        </button>
+    {% endif %}
+
+    {% if __SELF__.participants.contains('id', __SELF__.participant.id) %}
+        <button class="btn btn-sm btn-danger"
+                data-request="{{ __SELF__ ~ '::onLeaveRound' }}"
+                data-request-data="round_id: {{ __SELF__.round.id }}"
+                data-attach-loading>
+            <span class="icon icon-frown"></span> Leave round
+        </button>
+    {% endif %}
+
+    <button class="btn btn-sm btn-success"
+            data-request="{{ __SELF__ ~ '::onServeRound' }}"
+            data-request-data="round_id: {{ __SELF__.round.id }}"
+            data-attach-loading>
+        Serve round
+    </button>
+
+    {% if __SELF__.round.designatedParticipant.id == __SELF__.participant.id %}
+        <button class="btn btn-sm btn-success"
+                data-request="{{ __SELF__ ~ '::onFinishRound' }}"
+                data-request-data="round_id: {{ __SELF__.round.id }}"
+                data-attach-loading>
+            <span class="icon icon-trophy"></span> Finish and collect your score
+        </button>
+    {% endif %}
+
+    <hr>
+
+    <h4>Participants</h4>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th class="col-sm-6 col-md-4">Participant</th>
+            <th class="col-sm-6 col-md-8">Beverage</th>
+        </tr>
+        </thead>
+        {% for participant in __SELF__.participants %}
+            <tr>
+                <td>{{ participant.name }}</td>
+                <td>{{ __SELF__.beverages[participant.pivot.beverage_id] }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">No participants yet...</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endif %}

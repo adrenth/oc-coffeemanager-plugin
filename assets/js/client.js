@@ -13,40 +13,40 @@ jQuery(document).ready(function () {
         if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID) {
             showNotification(data.participant + ' initiated a new Coffee Round!');
         }
-        refreshPartial();
+        refreshPartials('_session-actions,_round-details,_round-join');
     });
 
     channel.bind('participant-joined-round', function (data) {
         if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID) {
             showNotification(data.participant + ' joined the Coffee Round!');
         }
-        refreshPartial();
+        refreshPartials('_round-details');
     });
 
     channel.bind('participant-left-round', function (data) {
         if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID) {
             showNotification('Unfortunately ' + data.participant + ' left the Coffee Round.');
         }
-        refreshPartial();
+        refreshPartials('_round-details');
     });
 
     channel.bind('round-cancelled', function (data) {
         if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID) {
             showNotification('Coffee Round cancelled by ' + data.participant + '.');
         }
-        refreshPartial();
+        refreshPartials('_session-actions,_round-details,_round-join');
     });
 
     channel.bind('round-expired', function () {
         showNotification('Coffee Round is expired.');
-        refreshPartial();
+        refreshPartials('_session-actions,_round-details,_round-join');
     });
 
     channel.bind('round-finished', function (data) {
         if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID) {
             showNotification('Coffee Round finished by ' + data.participant + '.');
         }
-        refreshPartial();
+        refreshPartials('_session-actions,_participant-details_round-details,_round-join');
     });
 
     channel.bind('participant-chosen', function (data) {
@@ -55,7 +55,7 @@ jQuery(document).ready(function () {
         } else {
             showNotification('You\'re the designated participant!');
         }
-        refreshPartial();
+        refreshPartials('_round-details,_round-join');
     });
 
     function showNotification(body) {
@@ -68,8 +68,14 @@ jQuery(document).ready(function () {
         }
     }
 
-    function refreshPartial() {
+    function refreshPartials(partialIds) {
+
+        console.log(partialIds);
+
         $.request('coffeeManagerClient::onRefresh', {
+            data: {
+                partialIds: partialIds
+            },
             success: function (data, textStatus, jqXHR) {
                 this.success(data, textStatus, jqXHR);
             }
