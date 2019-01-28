@@ -69,9 +69,6 @@ jQuery(document).ready(function () {
     }
 
     function refreshPartials(partialIds) {
-
-        console.log(partialIds);
-
         $.request('coffeeManagerClient::onRefresh', {
             data: {
                 partialIds: partialIds
