@@ -1,0 +1,30 @@
+{% if __SELF__.round and not __SELF__.round.designatedParticipant %}
+    {% if not __SELF__.participants.contains('id', __SELF__.participant.id) %}
+        <h4>What would you like to drink?</h4>
+        <form data-request="{{ __SELF__ ~ '::onJoinRound' }}"
+              data-request-flash>
+            <input type="hidden" name="round_id" value="{{ __SELF__.round.id }}">
+            <div class="row">
+                <div class="col-sm-6 col-md-10">
+                    <select class="form-control"
+                            name="beverage_id">
+                        {% for beverageGroup in __SELF__.beverageGroups %}
+                            <optgroup label="{{ beverageGroup.name }}">
+                                {% for beverage in beverageGroup.beverages %}
+                                    <option value="{{ beverage.id }}" {% if __SELF__.participant.defaultBeverage.id == beverage.id %} selected{% endif %}>
+                                        {{ beverage.name }}
+                                    </option>
+                                {% endfor %}
+                            </optgroup>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-6 col-md-2">
+                    <button type="submit" class="btn btn-block btn-primary" data-attach-loading>
+                        Join
+                    </button>
+                </div>
+            </div>
+        </form>
+    {% endif %}
+{% endif %}

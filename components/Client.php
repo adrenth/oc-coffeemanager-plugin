@@ -31,6 +31,16 @@ class Client extends ComponentBase
     /**
      * @var array
      */
+    private static $allowedPartials = [
+        '_participant-details',
+        '_round-details',
+        '_round-join',
+        '_session-actions',
+    ];
+
+    /**
+     * @var array
+     */
     public $config;
 
     /**
@@ -200,7 +210,9 @@ class Client extends ComponentBase
         $this->prepareVars();
 
         return [
-            '#details' => $this->renderPartial($this->alias . '::_details'),
+            '#session-actions' => $this->renderPartial($this->alias . '::_session-actions'),
+            '#round-details' => $this->renderPartial($this->alias . '::_round-details'),
+            '#round-join' => $this->renderPartial($this->alias . '::_round-join'),
         ];
     }
 
@@ -238,7 +250,8 @@ class Client extends ComponentBase
         $this->prepareVars();
 
         return [
-            '#details' => $this->renderPartial($this->alias . '::_details'),
+            '#round-details' => $this->renderPartial($this->alias . '::_round-details'),
+            '#round-join' => $this->renderPartial($this->alias . '::_round-join'),
         ];
     }
 
@@ -271,7 +284,8 @@ class Client extends ComponentBase
         $this->prepareVars();
 
         return [
-            '#details' => $this->renderPartial($this->alias . '::_details'),
+            '#round-details' => $this->renderPartial($this->alias . '::_round-details'),
+            '#round-join' => $this->renderPartial($this->alias . '::_round-join'),
         ];
     }
 
@@ -322,7 +336,9 @@ class Client extends ComponentBase
         $this->prepareVars();
 
         return [
-            '#details' => $this->renderPartial($this->alias . '::_details'),
+            '#session-actions' => $this->renderPartial($this->alias . '::_session-actions'),
+            '#round-details' => $this->renderPartial($this->alias . '::_round-details'),
+            '#round-join' => $this->renderPartial($this->alias . '::_round-join'),
         ];
     }
 
@@ -373,7 +389,9 @@ class Client extends ComponentBase
         );
 
         return [
-            '#details' => $this->renderPartial($this->alias . '::_details'),
+            '#participant-details' => $this->renderPartial($this->alias . '::participant-details'),
+            '#round-details' => $this->renderPartial($this->alias . '::_round-details'),
+            '#round-join' => $this->renderPartial($this->alias . '::_round-join'),
         ];
     }
 
@@ -385,8 +403,19 @@ class Client extends ComponentBase
     {
         $this->prepareVars();
 
-        return [
-            '#details' => $this->renderPartial($this->alias . '::_details'),
-        ];
+        $partials = [];
+        $partialIds = explode(',', $this->request->get('partialIds', ''));
+
+        foreach ($partialIds as $partialId) {
+            if (!in_array($partialId, self::$allowedPartials, true)) {
+                continue;
+            }
+
+            $partials['#' . ltrim($partialId, '_')] = $this->renderPartial(
+                $this->alias . '::' . $partialId
+            );
+        }
+
+        return $partials;
     }
 }
