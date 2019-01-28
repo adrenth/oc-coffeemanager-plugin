@@ -247,6 +247,41 @@ class Client extends ComponentBase
      * @throws ModelNotFoundException
      * @throws PusherException
      */
+    public function onServeRound(): array
+    {
+        /** @var Round $round */
+        $round = Round::query()->findOrFail($this->request->get('round_id'));
+
+        /** @var Participant $participant */
+        $participant = Participant::query()
+            ->findOrFail($this->session->get('coffeemanager.participantId'));
+
+        $round->update([
+            'designated_participant_id' => $participant->getKey(),
+        ]);
+
+        $this->pusher->trigger(
+            'group-' . $round->group->getKey(),
+            'participant-chosen',
+            [
+                'participant' => $participant->getAttribute('name'),
+                'participant_id' => $participant->getKey(),
+                'round_id' => $round->getKey(),
+            ]
+        );
+
+        $this->prepareVars();
+
+        return [
+            '#details' => $this->renderPartial($this->alias . '::_details'),
+        ];
+    }
+
+    /**
+     * @return array
+     * @throws ModelNotFoundException
+     * @throws PusherException
+     */
     public function onLeaveRound(): array
     {
         /** @var Round $round */

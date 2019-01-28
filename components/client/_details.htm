@@ -90,6 +90,14 @@
                         Leave round
                     </button>
                 </div>
+                <div class="col-sm-6 col-md-4">
+                    <button class="btn btn-block btn-success"
+                            data-request="{{ __SELF__ ~ '::onServeRound' }}"
+                            data-request-data="round_id: {{ __SELF__.round.id }}"
+                            data-attach-loading>
+                        Serve round
+                    </button>
+                </div>
             </div>
         {% endif %}
     {% endif %}
