@@ -16,6 +16,24 @@
         {% endif %}
     {% endif %}
 
+    {% if __SELF__.round.initiatingParticipant.id == __SELF__.participant.id %}
+        <button class="btn btn-sm btn-primary"
+                data-request="{{ __SELF__ ~ '::onCancelRound' }}"
+                data-request-data="round_id: {{ __SELF__.round.id }}"
+                data-attach-loading>
+            <span class="icon icon-ban-circle"></span> Cancel round
+        </button>
+    {% endif %}
+
+    {% if __SELF__.participants.contains('id', __SELF__.participant.id) %}
+        <button class="btn btn-sm btn-danger"
+                data-request="{{ __SELF__ ~ '::onLeaveRound' }}"
+                data-request-data="round_id: {{ __SELF__.round.id }}"
+                data-attach-loading>
+            <span class="icon icon-frown"></span> Leave round
+        </button>
+    {% endif %}
+
     <hr>
 
     <h4>Participants</h4>
@@ -67,30 +85,6 @@
                     </div>
                 </div>
             </form>
-            {% if __SELF__.round.initiatingParticipant.id == __SELF__.participant.id %}
-                <hr>
-                <div class="row">
-                    <div class="col-sm-6 col-md-4">
-                        <button class="btn btn-block btn-danger"
-                                data-request="{{ __SELF__ ~ '::onCancelRound' }}"
-                                data-request-data="round_id: {{ __SELF__.round.id }}"
-                                data-attach-loading>
-                            <span class="icon icon-trash"></span> Cancel round
-                        </button>
-                    </div>
-                </div>
-            {% endif %}
-        {% else %}
-            <div class="row">
-                <div class="col-sm-6 col-md-4">
-                    <button class="btn btn-block btn-danger"
-                            data-request="{{ __SELF__ ~ '::onLeaveRound' }}"
-                            data-request-data="round_id: {{ __SELF__.round.id }}"
-                            data-attach-loading>
-                        Leave round
-                    </button>
-                </div>
-            </div>
         {% endif %}
     {% endif %}
 
