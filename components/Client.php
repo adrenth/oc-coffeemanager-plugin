@@ -250,7 +250,10 @@ class Client extends ComponentBase
     public function onServeRound(): array
     {
         /** @var Round $round */
-        $round = Round::query()->findOrFail($this->request->get('round_id'));
+        $round = Round::query()
+            ->where('id', $this->request->get('round_id'))
+            ->whereNull('designated_participant_id')
+            ->firstOrFail();
 
         /** @var Participant $participant */
         $participant = Participant::query()
