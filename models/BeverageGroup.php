@@ -35,6 +35,7 @@ class BeverageGroup extends Model
         'beverages' => [
             Beverage::class,
             'key' => 'group_id',
+            'order' => 'name',
         ],
     ];
 }
