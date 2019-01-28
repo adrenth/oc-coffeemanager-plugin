@@ -250,6 +250,47 @@ class Client extends ComponentBase
         $this->prepareVars();
 
         return [
+            '#session-actions' => $this->renderPartial($this->alias . '::_session-actions'),
+            '#round-details' => $this->renderPartial($this->alias . '::_round-details'),
+            '#round-join' => $this->renderPartial($this->alias . '::_round-join'),
+        ];
+    }
+
+    /**
+     * @return array
+     * @throws ModelNotFoundException
+     * @throws PusherException
+     */
+    public function onServeRound(): array
+    {
+        /** @var Round $round */
+        $round = Round::query()
+            ->where('id', $this->request->get('round_id'))
+            ->whereNull('designated_participant_id')
+            ->firstOrFail();
+
+        /** @var Participant $participant */
+        $participant = Participant::query()
+            ->findOrFail($this->session->get('coffeemanager.participantId'));
+
+        $round->update([
+            'designated_participant_id' => $participant->getKey(),
+        ]);
+
+        $this->pusher->trigger(
+            'group-' . $round->group->getKey(),
+            'participant-chosen',
+            [
+                'participant' => $participant->getAttribute('name'),
+                'participant_id' => $participant->getKey(),
+                'round_id' => $round->getKey(),
+            ]
+        );
+
+        $this->prepareVars();
+
+        return [
+            '#session-actions' => $this->renderPartial($this->alias . '::_session-actions'),
             '#round-details' => $this->renderPartial($this->alias . '::_round-details'),
             '#round-join' => $this->renderPartial($this->alias . '::_round-join'),
         ];
@@ -357,6 +398,7 @@ class Client extends ComponentBase
             ->findOrFail($this->session->get('coffeemanager.participantId'));
 
         if ($round->designatedParticipant->getKey() !== $participant->getKey()) {
+            dd(1);
             $this->flashBag->error('You are not allowed to do that!');
             return [];
         }
@@ -388,8 +430,10 @@ class Client extends ComponentBase
             ]
         );
 
+        $this->prepareVars();
+
         return [
-            '#participant-details' => $this->renderPartial($this->alias . '::participant-details'),
+            '#participant-details' => $this->renderPartial($this->alias . '::_participant-details'),
             '#round-details' => $this->renderPartial($this->alias . '::_round-details'),
             '#round-join' => $this->renderPartial($this->alias . '::_round-join'),
         ];

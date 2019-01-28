@@ -2,8 +2,11 @@
     <h4>Current round</h4>
 
     <p>Initiator: {{ __SELF__.round.initiatingParticipant.name }}</p>
-    <p>Expires at: {{ __SELF__.round.expires_at.format('H:i') }}</p>
-    <p>Is finished: {{ __SELF__.round.is_finished ? 'Yes' : 'No' }}</p>
+    {% if __SELF__.round.designatedParticipant %}
+        <p>Is finished: {{ __SELF__.round.is_finished ? 'Yes' : 'No' }}</p>
+    {% else %}
+        <p>Expires at: {{ __SELF__.round.expires_at.format('H:i') }}</p>
+    {% endif %}
 
     {% if __SELF__.round.designatedParticipant %}
         {% if __SELF__.round.designatedParticipant.id == __SELF__.participant.id %}
@@ -13,32 +16,44 @@
         {% endif %}
     {% endif %}
 
-        {% if __SELF__.round.initiatingParticipant.id == __SELF__.participant.id %}
-            <button class="btn btn-sm btn-primary"
-                    data-request="{{ __SELF__ ~ '::onCancelRound' }}"
-                    data-request-data="round_id: {{ __SELF__.round.id }}"
-                    data-attach-loading>
-                <span class="icon icon-ban-circle"></span> Cancel round
-            </button>
-        {% endif %}
+    {% if __SELF__.round.initiatingParticipant.id == __SELF__.participant.id
+        and not __SELF__.round.designatedParticipant %}
+        <button class="btn btn-sm btn-primary"
+                data-request="{{ __SELF__ ~ '::onCancelRound' }}"
+                data-request-data="round_id: {{ __SELF__.round.id }}"
+                data-attach-loading>
+            <span class="icon icon-ban-circle"></span> Cancel round
+        </button>
+    {% endif %}
 
-        {% if __SELF__.participants.contains('id', __SELF__.participant.id) %}
-            <button class="btn btn-sm btn-danger"
-                    data-request="{{ __SELF__ ~ '::onLeaveRound' }}"
-                    data-request-data="round_id: {{ __SELF__.round.id }}"
-                    data-attach-loading>
-                <span class="icon icon-frown"></span> Leave round
-            </button>
-        {% endif %}
+    {% if __SELF__.participants.contains('id', __SELF__.participant.id)
+        and not __SELF__.round.designatedParticipant %}
+        <button class="btn btn-sm btn-danger"
+                data-request="{{ __SELF__ ~ '::onLeaveRound' }}"
+                data-request-data="round_id: {{ __SELF__.round.id }}"
+                data-attach-loading>
+            <span class="icon icon-frown"></span> Leave round
+        </button>
+    {% endif %}
 
-        {% if __SELF__.round.designatedParticipant.id == __SELF__.participant.id %}
-            <button class="btn btn-sm btn-success"
-                    data-request="{{ __SELF__ ~ '::onFinishRound' }}"
-                    data-request-data="round_id: {{ __SELF__.round.id }}"
-                    data-attach-loading>
-                <span class="icon icon-trophy"></span> Finish and collect your score
-            </button>
-        {% endif %}
+    {% if __SELF__.participants|length > 1
+        and not __SELF__.round.designatedParticipant %}
+        <button class="btn btn-sm btn-success"
+                data-request="{{ __SELF__ ~ '::onServeRound' }}"
+                data-request-data="round_id: {{ __SELF__.round.id }}"
+                data-attach-loading>
+            Serve round now
+        </button>
+    {% endif %}
+
+    {% if __SELF__.round.designatedParticipant.id == __SELF__.participant.id %}
+        <button class="btn btn-sm btn-success"
+                data-request="{{ __SELF__ ~ '::onFinishRound' }}"
+                data-request-data="round_id: {{ __SELF__.round.id }}"
+                data-attach-loading>
+            <span class="icon icon-trophy"></span> Finish and collect your score
+        </button>
+    {% endif %}
 
     <hr>
 
