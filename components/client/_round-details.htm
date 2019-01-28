@@ -20,9 +20,10 @@
         and not __SELF__.round.designatedParticipant %}
         <button class="btn btn-sm btn-primary"
                 data-request="{{ __SELF__ ~ '::onCancelRound' }}"
+                data-request-confirm="Are you sure?"
                 data-request-data="round_id: {{ __SELF__.round.id }}"
                 data-attach-loading>
-            <span class="icon icon-ban-circle"></span> Cancel round
+            <span class="icon icon-ban-circle"></span> Cancel
         </button>
     {% endif %}
 
@@ -32,7 +33,7 @@
                 data-request="{{ __SELF__ ~ '::onLeaveRound' }}"
                 data-request-data="round_id: {{ __SELF__.round.id }}"
                 data-attach-loading>
-            <span class="icon icon-frown"></span> Leave round
+            <span class="icon icon-frown"></span> Leave
         </button>
     {% endif %}
 
@@ -42,7 +43,7 @@
                 data-request="{{ __SELF__ ~ '::onServeRound' }}"
                 data-request-data="round_id: {{ __SELF__.round.id }}"
                 data-attach-loading>
-            Serve round now
+            <span class="icon icon-heart"></span> Serve now
         </button>
     {% endif %}
 
@@ -73,7 +74,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="2">No participants yet...</td>
+                <td colspan="2"><span class="icon icon-spinner"></span> No participants yet...</td>
             </tr>
         {% endfor %}
     </table>
