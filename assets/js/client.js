@@ -17,33 +17,37 @@ jQuery(document).ready(function () {
     });
 
     channel.bind('participant-joined-round', function (data) {
-        if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID) {
+        if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID
+            && data.participants.indexOf(COFFEE_MANAGER_PARTICIPANT_ID) !== -1) {
             showNotification(data.participant + ' joined the Coffee Round!');
         }
         refreshPartials('_round-details');
     });
 
     channel.bind('participant-left-round', function (data) {
-        if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID) {
+        if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID
+            && data.participants.indexOf(COFFEE_MANAGER_PARTICIPANT_ID) !== -1) {
             showNotification('Unfortunately ' + data.participant + ' left the Coffee Round.');
         }
         refreshPartials('_round-details');
     });
 
     channel.bind('round-cancelled', function (data) {
-        if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID) {
+        if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID
+            && data.participants.indexOf(COFFEE_MANAGER_PARTICIPANT_ID) !== -1) {
             showNotification('Coffee Round cancelled by ' + data.participant + '.');
         }
         refreshPartials('_session-actions,_round-details,_round-join');
     });
 
     channel.bind('round-expired', function () {
-        showNotification('Coffee Round is expired.');
+        showNotification('Coffee Round has been expired.');
         refreshPartials('_session-actions,_round-details,_round-join');
     });
 
     channel.bind('round-finished', function (data) {
-        if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID) {
+        if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID
+            && data.participants.indexOf(COFFEE_MANAGER_PARTICIPANT_ID) !== -1) {
             showNotification('Coffee Round finished by ' + data.participant + '.');
         }
         refreshPartials('_session-actions,_participant-details,_round-details,_round-join');
@@ -51,7 +55,9 @@ jQuery(document).ready(function () {
 
     channel.bind('participant-chosen', function (data) {
         if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID) {
-            showNotification(data.participant + ' will get your beverage.');
+            if (data.participants.indexOf(COFFEE_MANAGER_PARTICIPANT_ID) !== -1) {
+                showNotification(data.participant + ' will get your beverage.');
+            }
         } else {
             showNotification('You\'re the designated participant!');
         }

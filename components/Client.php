@@ -243,6 +243,7 @@ class Client extends ComponentBase
             [
                 'participant' => $participant->getAttribute('name'),
                 'participant_id' => $participant->getKey(),
+                'participants' => $round->participants->pluck('id'),
                 'round_id' => $round->getKey(),
             ]
         );
@@ -283,6 +284,7 @@ class Client extends ComponentBase
             [
                 'participant' => $participant->getAttribute('name'),
                 'participant_id' => $participant->getKey(),
+                'participants' => $round->participants->pluck('id'),
                 'round_id' => $round->getKey(),
             ]
         );
@@ -318,6 +320,7 @@ class Client extends ComponentBase
             [
                 'participant' => $participant->getAttribute('name'),
                 'participant_id' => $participant->getKey(),
+                'participants' => $round->participants->pluck('id'),
                 'round_id' => $round->getKey(),
             ]
         );
@@ -370,6 +373,7 @@ class Client extends ComponentBase
             [
                 'participant' => $participant->getAttribute('name'),
                 'participant_id' => $participant->getKey(),
+                'participants' => $round->participants->pluck('id'),
                 'round_id' => $round->getKey(),
             ]
         );
@@ -398,7 +402,6 @@ class Client extends ComponentBase
             ->findOrFail($this->session->get('coffeemanager.participantId'));
 
         if ($round->designatedParticipant->getKey() !== $participant->getKey()) {
-            dd(1);
             $this->flashBag->error('You are not allowed to do that!');
             return [];
         }
@@ -426,6 +429,7 @@ class Client extends ComponentBase
             [
                 'participant' => $participant->getAttribute('name'),
                 'participant_id' => $participant->getKey(),
+                'participants' => $round->participants->pluck('id'),
                 'round_id' => $round->getKey(),
             ]
         );
