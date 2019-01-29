@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Adrenth\CoffeeManager\Models;
 
 use Eloquent;
+use October\Rain\Database\Collection;
 use October\Rain\Database\Model;
 
 /** @noinspection ClassOverridesFieldOfSuperClassInspection */
@@ -15,6 +16,7 @@ use October\Rain\Database\Model;
  *
  * @package Adrenth\CoffeeManager\Models
  * @mixin Eloquent
+ * @property Collection participants
  * @property Round|null round
  */
 class Group extends Model
@@ -28,6 +30,17 @@ class Group extends Model
      * {@inheritdoc}
      */
     protected $guarded = [];
+
+    /**
+     * {@inheritdoc}
+     */
+    public $hasMany = [
+        'participants' => [
+            Participant::class,
+            'key' => 'group_id',
+            'order' => 'name',
+        ],
+    ];
 
     /**
      * {@inheritdoc}

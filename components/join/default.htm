@@ -5,8 +5,12 @@
             Join Coffee Group as participant:
         </label>
         <select class="form-control" name="participant">
-            {% for participant in __SELF__.participants %}
-                <option value="{{ participant.id }}">{{ participant.name }}</option>
+            {% for group in __SELF__.groups %}
+                <optgroup label="{{ group.name }}">
+                    {% for participant in group.participants %}
+                        <option value="{{ participant.id }}">{{ participant.name }}</option>
+                    {% endfor %}
+                </optgroup>
             {% endfor %}
         </select>
     </div>

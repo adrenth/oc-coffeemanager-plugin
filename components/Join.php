@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Adrenth\CoffeeManager\Components;
 
+use Adrenth\CoffeeManager\Models\Group;
 use Adrenth\CoffeeManager\Models\Participant;
 use Cms\Classes\ComponentBase;
 use Cms\Classes\Page;
@@ -23,7 +24,7 @@ class Join extends ComponentBase
     /**
      * @var Collection
      */
-    public $participants;
+    public $groups;
 
     /**
      * {@inheritdoc}
@@ -88,6 +89,6 @@ class Join extends ComponentBase
      */
     protected function prepareVars(): void
     {
-        $this->participants = Participant::query()->orderBy('name')->get();
+        $this->groups = Group::query()->orderBy('name')->get();
     }
 }
