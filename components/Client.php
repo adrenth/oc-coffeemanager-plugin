@@ -395,7 +395,10 @@ class Client extends ComponentBase
     public function onFinishRound(): array
     {
         /** @var Round $round */
-        $round = Round::query()->findOrFail($this->request->get('round_id'));
+        $round = Round::query()
+            ->where('id', $this->request->get('round_id'))
+            ->where('is_finished', false)
+            ->firstOrFail();
 
         /** @var Participant $participant */
         $participant = Participant::query()
