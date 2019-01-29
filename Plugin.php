@@ -6,6 +6,7 @@ namespace Adrenth\CoffeeManager;
 
 use Adrenth\CoffeeManager\ServiceProviders\CoffeeManager;
 use Backend\Helpers\Backend;
+use Illuminate\Console\Scheduling\Schedule;
 use System\Classes\PluginBase;
 use Adrenth\CoffeeManager\Components;
 use Adrenth\CoffeeManager\Console;
@@ -37,17 +38,17 @@ class Plugin extends PluginBase
     {
         $this->app->register(CoffeeManager::class);
 
-        $this->registerConsoleCommand(
-            'adrenth.coffeemanager.serve-rounds',
-            Console\ServeRounds::class
-        );
+        $this->registerConsoleCommand('adrenth.coffeemanager.finish-rounds', Console\FinishRounds::class);
+        $this->registerConsoleCommand('adrenth.coffeemanager.serve-rounds', Console\ServeRounds::class);
     }
 
     /**
-     * {@inheritdoc}
+     * @param Schedule $schedule
+     * @return void
      */
-    public function registerSchedule($schedule)
+    public function registerSchedule($schedule): void
     {
+        $schedule->command(Console\FinishRounds::class)->everyMinute();
         $schedule->command(Console\ServeRounds::class)->everyMinute();
     }
 
