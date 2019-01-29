@@ -77,6 +77,7 @@ class ServeRounds extends Command
                 [
                     'participant' => $participant->getAttribute('name'),
                     'participant_id' => $participant->getKey(),
+                    'participants' => $round->participants->pluck('id'),
                     'round_id' => $round->getKey(),
                 ]
             );
