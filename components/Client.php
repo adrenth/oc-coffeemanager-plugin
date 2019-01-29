@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Adrenth\CoffeeManager\Components;
 
-use Adrenth\CoffeeManager\Models\Beverage;
-use Adrenth\CoffeeManager\Models\BeverageGroup;
-use Adrenth\CoffeeManager\Models\Participant;
-use Adrenth\CoffeeManager\Models\Round;
+use Adrenth\CoffeeManager\Classes\Exceptions\OngoingRound;
+use Adrenth\CoffeeManager\Classes\RoundHelper;
+use Adrenth\CoffeeManager\Models;
 use Cms\Classes\ComponentBase;
 use Cms\Classes\Page;
 use Exception;
@@ -19,7 +18,6 @@ use Illuminate\Session\Store;
 use October\Rain\Database\Collection;
 use October\Rain\Flash\FlashBag;
 use Pusher\Pusher;
-use Pusher\PusherException;
 
 /**
  * Class Client
@@ -44,7 +42,7 @@ class Client extends ComponentBase
     public $config;
 
     /**
-     * @var Participant
+     * @var Models\Participant
      */
     public $participant;
 
@@ -54,7 +52,7 @@ class Client extends ComponentBase
     public $participants;
 
     /**
-     * @var Round
+     * @var Models\Round
      */
     public $round;
 
@@ -154,58 +152,41 @@ class Client extends ComponentBase
      */
     protected function prepareVars(): void
     {
-        $this->participant = Participant::query()
+        $this->participant = Models\Participant::query()
             ->findOrFail($this->session->get('coffeemanager.participantId'));
 
         $this->round = $this->participant->group->round;
 
-        $this->beverageGroups = BeverageGroup::query()
+        $this->beverageGroups = Models\BeverageGroup::query()
             ->orderBy('name')
             ->get();
 
-        $this->beverages = Beverage::query()
+        $this->beverages = Models\Beverage::query()
             ->orderBy('name')
             ->get(['name', 'id'])
             ->pluck('name', 'id')
             ->toArray();
 
-        $this->participants = $this->round ? $this->round->participants : new Collection();
+        $this->participants = $this->round
+            ? $this->round->participants
+            : new Collection();
     }
 
     /**
-     * @throws PusherException
      * @throws ModelNotFoundException
      */
     public function onInitiateRound(): array
     {
         $this->prepareVars();
 
-        $this->participant->group->reload();
-
-        if ($this->participant->group->getAttribute('current_round_id') !== null) {
-            $this->flashBag->error('There\'s currently a round ongoing!');
-            return [];
+        try {
+            (new RoundHelper())->initiate(
+                (int) $this->session->get('coffeemanager.participantId'),
+                (int) $this->request->get('minutes', 2)
+            );
+        } catch (OngoingRound $e) {
+            $this->flashBag->error($e->getMessage());
         }
-
-        $round = Round::create([
-            'group_id' => $this->participant->group->getKey(),
-            'initiating_participant_id' => $this->participant->getKey(),
-            'expires_at' => now()->addMinutes($this->request->get('minutes', 2))->toDateTimeString(),
-        ]);
-
-        $this->participant->group->update([
-            'current_round_id' => $round->getKey(),
-        ]);
-
-        $this->pusher->trigger(
-            'group-' . $this->participant->group->getKey(),
-            'participant-initiates-new-round',
-            [
-                'participant' => $this->participant->getAttribute('name'),
-                'participant_id' => $this->participant->getKey(),
-                'round_id' => $round->getKey(),
-            ]
-        );
 
         $this->prepareVars();
 
@@ -218,34 +199,13 @@ class Client extends ComponentBase
 
     /**
      * @throws ModelNotFoundException
-     * @throws PusherException
      */
     public function onJoinRound(): array
     {
-        /** @var Round $round */
-        $round = Round::query()->findOrFail($this->request->get('round_id'));
-
-        /** @var Participant $participant */
-        $participant = Participant::query()
-            ->findOrFail($this->session->get('coffeemanager.participantId'));
-
-        $round->participants()->add(
-            $participant,
-            null,
-            [
-                'beverage_id' => $this->request->get('beverage_id'),
-            ]
-        );
-
-        $this->pusher->trigger(
-            'group-' . $round->group->getKey(),
-            'participant-joined-round',
-            [
-                'participant' => $participant->getAttribute('name'),
-                'participant_id' => $participant->getKey(),
-                'participants' => $round->participants->pluck('id'),
-                'round_id' => $round->getKey(),
-            ]
+        (new RoundHelper())->join(
+            (int) $this->request->get('round_id'),
+            (int) $this->session->get('coffeemanager.participantId'),
+            (int) $this->request->get('beverage_id')
         );
 
         $this->prepareVars();
@@ -260,33 +220,12 @@ class Client extends ComponentBase
     /**
      * @return array
      * @throws ModelNotFoundException
-     * @throws PusherException
      */
     public function onServeRound(): array
     {
-        /** @var Round $round */
-        $round = Round::query()
-            ->where('id', $this->request->get('round_id'))
-            ->whereNull('designated_participant_id')
-            ->firstOrFail();
-
-        /** @var Participant $participant */
-        $participant = Participant::query()
-            ->findOrFail($this->session->get('coffeemanager.participantId'));
-
-        $round->update([
-            'designated_participant_id' => $participant->getKey(),
-        ]);
-
-        $this->pusher->trigger(
-            'group-' . $round->group->getKey(),
-            'participant-chosen',
-            [
-                'participant' => $participant->getAttribute('name'),
-                'participant_id' => $participant->getKey(),
-                'participants' => $round->participants->pluck('id'),
-                'round_id' => $round->getKey(),
-            ]
+        (new RoundHelper())->serve(
+            (int) $this->request->get('round_id'),
+            (int) $this->session->get('coffeemanager.participantId')
         );
 
         $this->prepareVars();
@@ -301,28 +240,12 @@ class Client extends ComponentBase
     /**
      * @return array
      * @throws ModelNotFoundException
-     * @throws PusherException
      */
     public function onLeaveRound(): array
     {
-        /** @var Round $round */
-        $round = Round::query()->findOrFail($this->request->get('round_id'));
-
-        /** @var Participant $participant */
-        $participant = Participant::query()
-            ->findOrFail($this->session->get('coffeemanager.participantId'));
-
-        $round->participants()->remove($participant);
-
-        $this->pusher->trigger(
-            'group-' . $round->group->getKey(),
-            'participant-left-round',
-            [
-                'participant' => $participant->getAttribute('name'),
-                'participant_id' => $participant->getKey(),
-                'participants' => $round->participants->pluck('id'),
-                'round_id' => $round->getKey(),
-            ]
+        (new RoundHelper())->leave(
+            (int) $this->request->get('round_id'),
+            (int) $this->session->get('coffeemanager.participantId')
         );
 
         $this->prepareVars();
@@ -346,36 +269,13 @@ class Client extends ComponentBase
     /**
      * @return array
      * @throws ModelNotFoundException
-     * @throws PusherException
      * @throws Exception
      */
     public function onCancelRound(): array
     {
-        /** @var Round $round */
-        $round = Round::query()->findOrFail($this->request->get('round_id'));
-
-        /** @var Participant $participant */
-        $participant = Participant::query()
-            ->findOrFail($this->session->get('coffeemanager.participantId'));
-
-        if ($round->initiatingParticipant->getKey() !== $participant->getKey()) {
-            $this->flashBag->error('You are not allowed to do that!');
-            return [];
-        }
-
-        $round->delete();
-
-        $participant->group->update(['current_round_id' => null]);
-
-        $this->pusher->trigger(
-            'group-' . $round->group->getKey(),
-            'round-cancelled',
-            [
-                'participant' => $participant->getAttribute('name'),
-                'participant_id' => $participant->getKey(),
-                'participants' => $round->participants->pluck('id'),
-                'round_id' => $round->getKey(),
-            ]
+        (new RoundHelper())->cancel(
+            (int) $this->request->get('round_id'),
+            (int) $this->session->get('coffeemanager.participantId')
         );
 
         $this->prepareVars();
@@ -390,51 +290,12 @@ class Client extends ComponentBase
     /**
      * @return array
      * @throws ModelNotFoundException
-     * @throws PusherException
      */
     public function onFinishRound(): array
     {
-        /** @var Round $round */
-        $round = Round::query()
-            ->where('id', $this->request->get('round_id'))
-            ->where('is_finished', false)
-            ->firstOrFail();
-
-        /** @var Participant $participant */
-        $participant = Participant::query()
-            ->findOrFail($this->session->get('coffeemanager.participantId'));
-
-        if ($round->designatedParticipant->getKey() !== $participant->getKey()) {
-            $this->flashBag->error('You are not allowed to do that!');
-            return [];
-        }
-
-        $round->update([
-            'is_finished' => true,
-        ]);
-
-        $participant->group->update(['current_round_id' => null]);
-
-        $participant->update([
-            'score' => $participant->getAttribute('score') + 1,
-        ]);
-
-        /** @var Participant $roundParticipant */
-        foreach ($round->participants as $roundParticipant) {
-            $roundParticipant->update([
-                'last_beverage_id' => $roundParticipant->pivot->beverage_id
-            ]);
-        }
-
-        $this->pusher->trigger(
-            'group-' . $round->group->getKey(),
-            'round-finished',
-            [
-                'participant' => $participant->getAttribute('name'),
-                'participant_id' => $participant->getKey(),
-                'participants' => $round->participants->pluck('id'),
-                'round_id' => $round->getKey(),
-            ]
+        (new RoundHelper())->finish(
+            (int) $this->request->get('round_id'),
+            (int) $this->session->get('coffeemanager.participantId')
         );
 
         $this->prepareVars();
