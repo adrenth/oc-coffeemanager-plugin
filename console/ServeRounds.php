@@ -48,6 +48,10 @@ class ServeRounds extends Command
              * Round has no participants. Finish it and continue to next round.
              */
             if ($round->participants->count() < 2) {
+                $round->group->update([
+                    'current_round_id' => null,
+                ]);
+
                 $round->update([
                     'is_finished' => true,
                 ]);
