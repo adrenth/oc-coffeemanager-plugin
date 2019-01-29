@@ -50,6 +50,12 @@ jQuery(document).ready(function () {
             && data.participants.indexOf(COFFEE_MANAGER_PARTICIPANT_ID) !== -1) {
             showNotification('Coffee Round finished by ' + data.participant + '.');
         }
+
+        refreshPartials('_session-actions,_participant-details,_round-details,_round-join');
+    });
+
+    channel.bind('round-finished-automatically', function () {
+        showNotification('Coffee Round has been finished automatically.');
         refreshPartials('_session-actions,_participant-details,_round-details,_round-join');
     });
 

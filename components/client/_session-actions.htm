@@ -1,10 +1,54 @@
 {% if not __SELF__.round %}
-    <button class="btn btn-primary pull-right"
-            data-request="{{ __SELF__ ~ '::onInitiateRound' }}"
-            data-request-flash
-            data-attach-loading>
-        <span class="icon icon-coffee"></span> Initiate new Coffee Round
-    </button>
+    <form class="form-horizontal col-md-12"
+          data-request="{{ __SELF__ ~ '::onInitiateRound' }}"
+          data-request-flash>
+
+        <div class="form-group">
+            <label class="control-label">
+                Participants must join within
+            </label>
+
+            <div class="radio">
+                <label>
+                    <input type="radio" name="minutes" value="1">1 minute
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="minutes" value="2" checked>2 minutes
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="minutes" value="3">3 minutes
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="minutes" value="4">4 minutes
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="minutes" value="5">5 minutes
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <button type="submit"
+                    class="btn btn-lg btn-primary"
+                    data-attach-loading>
+                <span class="icon icon-coffee"></span>
+                I want something to drink!
+            </button>
+        </div>
+
+    </form>
+
+
+    <hr>
+
     <button class="btn btn-default pull-left"
             data-request="{{ __SELF__ ~ '::onLeave' }}"
             data-request-flash

@@ -190,7 +190,7 @@ class Client extends ComponentBase
         $round = Round::create([
             'group_id' => $this->participant->group->getKey(),
             'initiating_participant_id' => $this->participant->getKey(),
-            'expires_at' => now()->addMinutes(3)->toDateTimeString(),
+            'expires_at' => now()->addMinutes($this->request->get('minutes', 2))->toDateTimeString(),
         ]);
 
         $this->participant->group->update([
@@ -395,7 +395,10 @@ class Client extends ComponentBase
     public function onFinishRound(): array
     {
         /** @var Round $round */
-        $round = Round::query()->findOrFail($this->request->get('round_id'));
+        $round = Round::query()
+            ->where('id', $this->request->get('round_id'))
+            ->where('is_finished', false)
+            ->firstOrFail();
 
         /** @var Participant $participant */
         $participant = Participant::query()
