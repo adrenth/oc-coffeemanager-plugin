@@ -27,6 +27,11 @@ class Join extends ComponentBase
     public $groups;
 
     /**
+     * @var Collection
+     */
+    public $participants;
+
+    /**
      * {@inheritdoc}
      */
     public function componentDetails(): array
@@ -73,13 +78,41 @@ class Join extends ComponentBase
         /** @var Store $session */
         $session = resolve(Store::class);
 
-        $participantId = (int) $request->get('participant');
+        $groupId = (int) $request->get('participantGroupId');
 
-        $participant = Participant::query()->findOrFail($participantId);
+        /** @var Participant $participant */
+        $participant = Participant::query()
+            ->findOrFail((int) $request->get('participantId'));
+
+        if ($participant->group->getKey() !== $groupId) {
+            $participant->update([
+                'group_id' => $groupId
+            ]);
+        }
 
         $session->put('coffeemanager.participantId', $participant->getKey());
 
         return redirect()->to(Page::url($this->property('clientPage')));
+    }
+
+    /**
+     * @return array
+     * @throws ModelNotFoundException
+     */
+    public function onChangeParticipant(): array
+    {
+        /** @var Request $request */
+        $request = resolve(Request::class);
+
+        /** @var Participant $participant */
+        $participant = Participant::query()->find((int) $request->get('participantId'));
+
+        return [
+            '#participantGroupWrapper' => $this->renderPartial($this->alias . '::_group', [
+                'selectedGroupId' => $participant ? $participant->group->getKey() : null,
+                'groups' => $this->getGroups(),
+            ])
+        ];
     }
 
     /**
@@ -89,6 +122,29 @@ class Join extends ComponentBase
      */
     protected function prepareVars(): void
     {
-        $this->groups = Group::query()->orderBy('name')->get();
+        $this->groups = $this->getGroups();
+        $this->participants = $this->getParticipants();
+    }
+
+    /**
+     * @return Collection
+     */
+    private function getGroups(): Collection
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return Group::query()
+            ->orderBy('name')
+            ->get();
+    }
+
+    /**
+     * @return Collection
+     */
+    private function getParticipants(): Collection
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return Participant::query()
+            ->orderBy('name')
+            ->get();
     }
 }

@@ -1,22 +1,27 @@
+{% spaceless %}
 <form class="form-horizontal"
       data-request="{{ __SELF__ ~ '::onJoin' }}">
     <div class="form-group">
         <label class="control-label">
-            Join Coffee Group as participant:
+            Participant:
         </label>
-        <select class="form-control" name="participant">
-            {% for group in __SELF__.groups %}
-                <optgroup label="{{ group.name }}">
-                    {% for participant in group.participants %}
-                        <option value="{{ participant.id }}">{{ participant.name }}</option>
-                    {% endfor %}
-                </optgroup>
+        <select class="form-control"
+                name="participantId"
+                data-request="{{ __SELF__ ~ '::onChangeParticipant' }}"
+                data-attach-loading>
+            <option value="">-- Select participant --</option>
+            {% for participant in __SELF__.participants %}
+                <option value="{{ participant.id }}">{{ participant.name }}</option>
             {% endfor %}
         </select>
     </div>
+    <div id="participantGroupWrapper">
+        {% partial __SELF__ ~ '::_group' groups=__SELF__.groups %}
+    </div>
     <div class="form-group">
-        <button class="btn btn-block btn-primary" type="submit">
+        <button class="btn btn-block btn-primary" type="submit" data-attach-loading>
             Join
         </button>
     </div>
 </form>
+{% endspaceless %}

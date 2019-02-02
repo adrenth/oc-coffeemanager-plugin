@@ -1,0 +1,17 @@
+{% spaceless %}
+<div class="form-group">
+    <label class="control-label">
+        Group:
+    </label>
+    <select class="form-control"
+            name="participantGroupId"
+            data-attach-loading>
+        <option value="">-- Select group --</option>
+        {%- for group in groups -%}
+            <option value="{{ group.id }}"{% if selectedGroupId == group.id %} selected{% endif %}>
+                {{- group.name -}}
+            </option>
+        {%- endfor -%}
+    </select>
+</div>
+{% endspaceless %}
