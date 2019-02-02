@@ -42,10 +42,11 @@ class RoundHelper
      *
      * @param int $participantId
      * @param int $expireInMinutes
-     * @throws OngoingRound
+     * @param int $beverageId
      * @throws ModelNotFoundException
+     * @throws OngoingRound
      */
-    public function initiate(int $participantId, int $expireInMinutes): void
+    public function initiate(int $participantId, int $expireInMinutes, int $beverageId): void
     {
         /** @var Models\Participant $participant */
         $participant = Models\Participant::findOrFail($participantId);
@@ -73,6 +74,10 @@ class RoundHelper
         } catch (PusherException $e) {
             $this->log->error($e);
         }
+
+        if ($beverageId > 0) {
+            $this->join($round->getKey(), $participant->getKey(), $beverageId);
+        }
     }
 
     /**
@@ -98,6 +103,10 @@ class RoundHelper
                 'beverage_id' => $beverageId,
             ]
         );
+
+        $participant->update([
+            'last_beverage_id' => $beverageId
+        ]);
 
         try {
             $this->triggerPusherEvent(

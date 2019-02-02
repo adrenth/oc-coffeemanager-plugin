@@ -2,57 +2,63 @@
     <form class="form-horizontal col-md-12"
           data-request="{{ __SELF__ ~ '::onInitiateRound' }}"
           data-request-flash>
-
-        <div class="form-group">
-            <label class="control-label">
-                Participants must join within
-            </label>
-
-            <div class="radio">
-                <label>
-                    <input type="radio" name="minutes" value="1">1 minute
-                </label>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="control-label">
+                        Participants must join within:
+                    </label>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="minutes" value="1">1 minute
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="minutes" value="2" checked>2 minutes
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="minutes" value="3">3 minutes
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="minutes" value="4">4 minutes
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="minutes" value="5">5 minutes
+                        </label>
+                    </div>
+                </div>
             </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="minutes" value="2" checked>2 minutes
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="minutes" value="3">3 minutes
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="minutes" value="4">4 minutes
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="minutes" value="5">5 minutes
-                </label>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="control-label">
+                        Select your beverage:
+                    </label>
+                    {% partial __SELF__ ~ '::_select-beverage' %}
+                </div>
+                <div class="form-group">
+                    <button type="submit"
+                            class="btn btn-block btn-primary"
+                            data-attach-loading>
+                        <strong>Initiate Coffee Round</strong>
+                    </button>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-block btn-default"
+                            data-request="{{ __SELF__ ~ '::onLeave' }}"
+                            data-request-flash
+                            data-request-loading>
+                        <span class="icon icon-angle-left"></span> Leave
+                    </button>
+                </div>
             </div>
         </div>
-
-        <div class="form-group">
-            <button type="submit"
-                    class="btn btn-lg btn-primary"
-                    data-attach-loading>
-                <span class="icon icon-coffee"></span>
-                I want something to drink!
-            </button>
-        </div>
-
     </form>
-
-
     <hr>
-
-    <button class="btn btn-default pull-left"
-            data-request="{{ __SELF__ ~ '::onLeave' }}"
-            data-request-flash
-            data-request-loading>
-        <span class="icon icon-angle-left"></span> Leave
-    </button>
 {% endif %}

@@ -3,21 +3,10 @@
         <h4>What would you like to drink?</h4>
         <form data-request="{{ __SELF__ ~ '::onJoinRound' }}"
               data-request-flash>
-            <input type="hidden" name="round_id" value="{{ __SELF__.round.id }}">
+            <input type="hidden" name="roundId" value="{{ __SELF__.round.id }}">
             <div class="row">
                 <div class="col-sm-6 col-md-10">
-                    <select class="form-control"
-                            name="beverage_id">
-                        {% for beverageGroup in __SELF__.beverageGroups %}
-                            <optgroup label="{{ beverageGroup.name }}">
-                                {% for beverage in beverageGroup.beverages %}
-                                    <option value="{{ beverage.id }}" {% if __SELF__.participant.defaultBeverage.id == beverage.id %} selected{% endif %}>
-                                        {{ beverage.name }}
-                                    </option>
-                                {% endfor %}
-                            </optgroup>
-                        {% endfor %}
-                    </select>
+                    {% partial __SELF__ ~ '::_select-beverage' %}
                 </div>
                 <div class="col-sm-6 col-md-2">
                     <button type="submit" class="btn btn-block btn-primary" data-attach-loading>

@@ -10,6 +10,7 @@ use Adrenth\CoffeeManager\Models;
 use Cms\Classes\ComponentBase;
 use Cms\Classes\Page;
 use Exception;
+use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -179,10 +180,25 @@ class Client extends ComponentBase
     {
         $this->prepareVars();
 
+        /** @var Factory $validationFactory */
+        $validationFactory = resolve(Factory::class);
+
+        $validator = $validationFactory->make(
+            $this->request->all(),
+            [
+                'minutes' => 'in:1,2,3,4,5'
+            ]
+        );
+
+        if ($validator->fails()) {
+            return [];
+        }
+
         try {
             (new RoundHelper())->initiate(
                 (int) $this->session->get('coffeemanager.participantId'),
-                (int) $this->request->get('minutes', 2)
+                (int) $this->request->get('minutes', 2),
+                (int) $this->request->get('beverageId')
             );
         } catch (OngoingRound $e) {
             $this->flashBag->error($e->getMessage());
@@ -203,9 +219,9 @@ class Client extends ComponentBase
     public function onJoinRound(): array
     {
         (new RoundHelper())->join(
-            (int) $this->request->get('round_id'),
+            (int) $this->request->get('roundId'),
             (int) $this->session->get('coffeemanager.participantId'),
-            (int) $this->request->get('beverage_id')
+            (int) $this->request->get('beverageId')
         );
 
         $this->prepareVars();
@@ -224,7 +240,7 @@ class Client extends ComponentBase
     public function onServeRound(): array
     {
         (new RoundHelper())->serve(
-            (int) $this->request->get('round_id'),
+            (int) $this->request->get('roundId'),
             (int) $this->session->get('coffeemanager.participantId')
         );
 
@@ -244,7 +260,7 @@ class Client extends ComponentBase
     public function onLeaveRound(): array
     {
         (new RoundHelper())->leave(
-            (int) $this->request->get('round_id'),
+            (int) $this->request->get('roundId'),
             (int) $this->session->get('coffeemanager.participantId')
         );
 
@@ -274,7 +290,7 @@ class Client extends ComponentBase
     public function onCancelRound(): array
     {
         (new RoundHelper())->cancel(
-            (int) $this->request->get('round_id'),
+            (int) $this->request->get('roundId'),
             (int) $this->session->get('coffeemanager.participantId')
         );
 
@@ -294,7 +310,7 @@ class Client extends ComponentBase
     public function onFinishRound(): array
     {
         (new RoundHelper())->finish(
-            (int) $this->request->get('round_id'),
+            (int) $this->request->get('roundId'),
             (int) $this->session->get('coffeemanager.participantId')
         );
 
