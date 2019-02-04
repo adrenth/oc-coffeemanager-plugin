@@ -18,7 +18,7 @@
 
     {% if __SELF__.round.initiatingParticipant.id == __SELF__.participant.id
         and not __SELF__.round.designatedParticipant %}
-        <button class="btn btn-sm btn-primary"
+        <button class="btn btn-primary"
                 data-request="{{ __SELF__ ~ '::onCancelRound' }}"
                 data-request-confirm="Are you sure?"
                 data-request-data="roundId: {{ __SELF__.round.id }}"
@@ -29,7 +29,7 @@
 
     {% if __SELF__.participants.contains('id', __SELF__.participant.id)
         and not __SELF__.round.designatedParticipant %}
-        <button class="btn btn-sm btn-danger"
+        <button class="btn btn-danger"
                 data-request="{{ __SELF__ ~ '::onLeaveRound' }}"
                 data-request-data="roundId: {{ __SELF__.round.id }}"
                 data-attach-loading>
@@ -39,7 +39,7 @@
 
     {% if __SELF__.participants|length > 1
         and not __SELF__.round.designatedParticipant %}
-        <button class="btn btn-sm btn-success"
+        <button class="btn btn-success"
                 data-request="{{ __SELF__ ~ '::onServeRound' }}"
                 data-request-data="roundId: {{ __SELF__.round.id }}"
                 data-attach-loading>
@@ -48,7 +48,7 @@
     {% endif %}
 
     {% if __SELF__.round.designatedParticipant.id == __SELF__.participant.id %}
-        <button class="btn btn-sm btn-success"
+        <button class="btn btn-success"
                 data-request="{{ __SELF__ ~ '::onFinishRound' }}"
                 data-request-data="roundId: {{ __SELF__.round.id }}"
                 data-attach-loading>
@@ -61,16 +61,15 @@
     <h4>Participants</h4>
 
     <table class="table table-bordered table-striped">
-        <thead>
-        <tr>
-            <th class="col-sm-6 col-md-4">Participant</th>
-            <th class="col-sm-6 col-md-8">Beverage</th>
-        </tr>
-        </thead>
         {% for participant in __SELF__.participants %}
             <tr>
-                <td>{{ participant.name }}</td>
-                <td>{{ __SELF__.beverages[participant.pivot.beverage_id] }}</td>
+                <td class="col-sm-6">
+                    {{ participant.name }}
+                    {% if participant.id == __SELF__.participant.id %}
+                    <small class="label label-primary">You</small>
+                    {% endif %}
+                </td>
+                <td class="col-sm-6">{{ __SELF__.beverages[participant.pivot.beverage_id] }}</td>
             </tr>
         {% else %}
             <tr>
