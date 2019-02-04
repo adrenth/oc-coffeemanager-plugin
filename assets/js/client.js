@@ -70,6 +70,20 @@ jQuery(document).ready(function () {
         refreshPartials('_round-details,_round-join');
     });
 
+    var $clock = $('#clock');
+    itsTheFinalCountDown($clock);
+
+    $('#round-details').on('ajaxUpdate', function () {
+        var $clock = $('#clock');
+        itsTheFinalCountDown($clock);
+    });
+
+    function itsTheFinalCountDown(clock) {
+        clock.countdown(clock.data('date'), function (event) {
+            $(this).html(event.strftime('%M:%S'));
+        });
+    }
+
     function showNotification(body) {
         var n = new Notification('Coffee Manager', {
             body: body
