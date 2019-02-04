@@ -18,9 +18,8 @@
 
     {% if __SELF__.round.initiatingParticipant.id == __SELF__.participant.id
         and not __SELF__.round.designatedParticipant %}
-        <button class="btn btn-primary"
+        <button class="btn btn-primary pull-right"
                 data-request="{{ __SELF__ ~ '::onCancelRound' }}"
-                data-request-confirm="Are you sure?"
                 data-request-data="roundId: {{ __SELF__.round.id }}"
                 data-attach-loading>
             <span class="icon icon-ban-circle"></span> Cancel
