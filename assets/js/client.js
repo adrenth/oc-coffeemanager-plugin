@@ -76,7 +76,8 @@ jQuery(document).ready(function () {
         });
 
         n.onclick = function () {
-            $('form').focus();
+            window.focus();
+            this.close();
         }
     }
 
