@@ -6,6 +6,7 @@ namespace Adrenth\CoffeeManager\Classes;
 
 use Adrenth\CoffeeManager\Classes\Exceptions\OngoingRound;
 use Adrenth\CoffeeManager\Models;
+use Carbon\Carbon;
 use Illuminate\Contracts\Logging\Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Pusher\Pusher;
@@ -58,7 +59,9 @@ class RoundHelper
         $round = Models\Round::create([
             'group_id' => $participant->group->getKey(),
             'initiating_participant_id' => $participant->getKey(),
-            'expires_at' => now()->addMinutes(abs($expireInMinutes))->toDateTimeString(),
+            'expires_at' => Carbon::parse(date('Y-m-d H:i:0'))
+                ->addMinutes(abs($expireInMinutes))
+                ->toDateTimeString(),
         ]);
 
         $participant->group->update([

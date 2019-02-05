@@ -5,7 +5,7 @@
     {% if __SELF__.round.designatedParticipant %}
         <p>Is finished: {{ __SELF__.round.is_finished ? 'Yes' : 'No' }}</p>
     {% else %}
-        <p>Expires at: <span id="clock" data-date="{{  __SELF__.round.expires_at.format('Y/m/d H:i:s') }}"></span></p>
+        <p>Expires in: <span id="clock" data-date="{{  __SELF__.round.expires_at.format('Y/m/d H:i:s') }}"></span></p>
     {% endif %}
 
     {% if __SELF__.round.designatedParticipant %}
