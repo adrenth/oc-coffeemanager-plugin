@@ -105,7 +105,9 @@ class Join extends ComponentBase
         $request = resolve(Request::class);
 
         /** @var Participant $participant */
-        $participant = Participant::query()->find((int) $request->get('participantId'));
+        $participant = Participant::query()->findOrFail(
+            (int) $request->get('participantId')
+        );
 
         return [
             '#participantGroupWrapper' => $this->renderPartial($this->alias . '::_group', [
