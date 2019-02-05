@@ -86,7 +86,8 @@ jQuery(document).ready(function () {
 
     function showNotification(body) {
         var n = new Notification('Coffee Manager', {
-            body: body
+            body: body,
+            icon: '/plugins/adrenth/coffeemanager/assets/images/coffee.png'
         });
 
         n.onclick = function () {
