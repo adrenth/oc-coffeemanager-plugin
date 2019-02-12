@@ -190,7 +190,7 @@ class Client extends ComponentBase
         $validator = $validationFactory->make(
             $this->request->all(),
             [
-                'minutes' => 'in:1,2,3,4,5'
+                'minutes' => 'in:1,2,3,4,5,10'
             ]
         );
 
