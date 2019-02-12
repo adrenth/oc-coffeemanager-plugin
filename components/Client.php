@@ -201,7 +201,7 @@ class Client extends ComponentBase
         try {
             (new RoundHelper())->initiate(
                 (int) $this->session->get('coffeemanager.participantId'),
-                (int) $this->request->get('minutes', 2),
+                (int) $this->request->get('minutes', 3),
                 (int) $this->request->get('beverageId')
             );
         } catch (OngoingRound $e) {
