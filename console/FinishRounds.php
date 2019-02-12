@@ -37,7 +37,7 @@ class FinishRounds extends Command
     public function handle(Connection $connection, Pusher $pusher): void
     {
         $rounds = Models\Round::query()
-            ->where($connection->raw('expires_at + INTERVAL 5 MINUTE'), '<', Carbon::now())
+            ->where($connection->raw('expires_at + INTERVAL 10 MINUTE'), '<', Carbon::now())
             ->where('is_finished', '=', false)
             ->get();
 
