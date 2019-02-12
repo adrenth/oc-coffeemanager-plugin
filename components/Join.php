@@ -13,6 +13,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Session\Store;
 use October\Rain\Database\Collection;
+use October\Rain\Flash\FlashBag;
 
 /**
  * Class Join
@@ -30,6 +31,11 @@ class Join extends ComponentBase
      * @var Collection
      */
     public $participants;
+
+    /**
+     * @var FlashBag
+     */
+    private $flashBag;
 
     /**
      * {@inheritdoc}
@@ -54,6 +60,14 @@ class Join extends ComponentBase
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function init()
+    {
+        $this->flashBag = resolve(FlashBag::class);
+    }
+
     /** @noinspection PhpMissingParentCallCommonInspection */
 
     /**
@@ -67,10 +81,9 @@ class Join extends ComponentBase
     }
 
     /**
-     * @return RedirectResponse
-     * @throws ModelNotFoundException
+     * @return mixed
      */
-    public function onJoin(): RedirectResponse
+    public function onJoin()
     {
         /** @var Request $request */
         $request = resolve(Request::class);
@@ -80,19 +93,23 @@ class Join extends ComponentBase
 
         $groupId = (int) $request->get('participantGroupId');
 
-        /** @var Participant $participant */
-        $participant = Participant::query()
-            ->findOrFail((int) $request->get('participantId'));
+        try {
+            /** @var Participant $participant */
+            $participant = Participant::query()
+                ->findOrFail((int) $request->get('participantId'));
 
-        if ($participant->group->getKey() !== $groupId) {
-            $participant->update([
-                'group_id' => $groupId
-            ]);
+            if ($participant->group->getKey() !== $groupId) {
+                $participant->update([
+                    'group_id' => $groupId
+                ]);
+            }
+
+            $session->put('coffeemanager.participantId', $participant->getKey());
+
+            return redirect()->to(Page::url($this->property('clientPage')));
+        } catch (ModelNotFoundException $e) {
+            $this->flashBag->warning('Select a participant please.');
         }
-
-        $session->put('coffeemanager.participantId', $participant->getKey());
-
-        return redirect()->to(Page::url($this->property('clientPage')));
     }
 
     /**

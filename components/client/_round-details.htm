@@ -59,8 +59,13 @@
 
     <hr>
 
-    <h4>Participants</h4>
+    {% if __SELF__.participants|length < 2 %}
+        <p>Waiting for someone to join the round...</p>
+        <hr>
+    {% endif %}
 
+    {% if __SELF__.participants|length > 1 %}
+    <h4>Participants</h4>
     <table class="table table-bordered table-striped">
         {% for participant in __SELF__.participants %}
             <tr>
@@ -72,10 +77,7 @@
                 </td>
                 <td class="col-sm-6">{{ __SELF__.beverages[participant.pivot.beverage_id] }}</td>
             </tr>
-        {% else %}
-            <tr>
-                <td colspan="2"><span class="icon icon-spinner"></span> No participants yet...</td>
-            </tr>
         {% endfor %}
     </table>
+    {% endif %}
 {% endif %}

@@ -1,12 +1,14 @@
 {% spaceless %}
 <form class="form-horizontal"
       method="post"
-      data-request="{{ __SELF__ ~ '::onJoin' }}">
+      data-request="{{ __SELF__ ~ '::onJoin' }}"
+      data-request-flash>
     <div class="form-group">
-        <label class="control-label">
+        <label class="control-label" for="participantId">
             Participant:
         </label>
         <select class="form-control"
+                id="participantId"
                 name="participantId"
                 data-request="{{ __SELF__ ~ '::onChangeParticipant' }}"
                 data-attach-loading>
@@ -20,7 +22,7 @@
         {% partial __SELF__ ~ '::_group' groups=__SELF__.groups %}
     </div>
     <div class="form-group">
-        <button class="btn btn-block btn-primary" type="submit" data-attach-loading>
+        <button class="btn btn-block btn-primary btn-lg" type="submit" data-attach-loading>
             Join
         </button>
     </div>

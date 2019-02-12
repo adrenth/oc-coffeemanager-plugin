@@ -1,17 +1,17 @@
 {%- spaceless -%}
 <select class="form-control"
         name="beverageId">
-    {%- if __SELF__.participant.lastBeverage -%}
-        <optgroup label="Your last beverage">
-            <option value="{{ __SELF__.participant.lastBeverage.id }}">
-                {{- __SELF__.participant.lastBeverage.name }} (last)
-            </option>
-        </optgroup>
-    {%- endif -%}
     {%- if __SELF__.participant.defaultBeverage -%}
         <optgroup label="Your default beverage">
             <option value="{{ __SELF__.participant.defaultBeverage.id }}">
                 {{- __SELF__.participant.defaultBeverage.name }}
+            </option>
+        </optgroup>
+    {%- endif -%}
+    {%- if __SELF__.participant.lastBeverage -%}
+        <optgroup label="Your last beverage">
+            <option value="{{ __SELF__.participant.lastBeverage.id }}">
+                {{- __SELF__.participant.lastBeverage.name }} (last)
             </option>
         </optgroup>
     {%- endif -%}
