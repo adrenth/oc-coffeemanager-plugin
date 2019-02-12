@@ -112,7 +112,7 @@ class Client extends ComponentBase
     {
         return [
             'name' => 'Client Component',
-            'description' => 'This programmer was too lazy to put a description here...',
+            'description' => '',
         ];
     }
 
@@ -124,6 +124,9 @@ class Client extends ComponentBase
         return [
             'joinPage' => [
                 'label' => 'Coffee Manager Join Page',
+            ],
+            'profilePage' => [
+                'label' => 'Coffee Manager Profile Page',
             ],
         ];
     }

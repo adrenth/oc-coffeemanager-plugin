@@ -38,7 +38,7 @@ class Join extends ComponentBase
     {
         return [
             'name' => 'Join Component',
-            'description' => 'This programmer was too lazy to put a description here...',
+            'description' => '',
         ];
     }
 

@@ -1,3 +1,5 @@
 <h2>{{ __SELF__.participant.group.name }}</h2>
-<p><em>{{ __SELF__.participant.name }}</em>, score: {{ __SELF__.participant.score }}</p>
+<p>
+    {{ __SELF__.participant.name }} [<a href="{{ __SELF__.properties.profilePage|page }}">edit profile</a>], score: {{ __SELF__.participant.score }}
+</p>
 <hr>

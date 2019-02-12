@@ -60,6 +60,7 @@ class Plugin extends PluginBase
         return [
             Components\Join::class => 'coffeeManagerJoin',
             Components\Client::class => 'coffeeManagerClient',
+            Components\Profile::class => 'coffeeManagerProfile',
         ];
     }
 
