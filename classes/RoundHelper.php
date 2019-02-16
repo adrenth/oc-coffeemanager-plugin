@@ -99,6 +99,10 @@ class RoundHelper
         /** @var Models\Participant $participant */
         $participant = Models\Participant::findOrFail($participantId);
 
+        if ($round->participants->contains($participant)) {
+            return;
+        }
+
         $round->participants()->add(
             $participant,
             null,
@@ -136,6 +140,10 @@ class RoundHelper
             ->where('id', '=', $roundId)
             ->whereNull('designated_participant_id')
             ->firstOrFail();
+
+        if ($round->getAttribute('designated_participant_id') !== null) {
+            return;
+        }
 
         /** @var Models\Participant $participant */
         $participant = Models\Participant::findOrFail($participantId);
