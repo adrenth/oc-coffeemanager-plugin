@@ -7,11 +7,12 @@ namespace Adrenth\CoffeeManager\Components;
 use Adrenth\CoffeeManager\Models;
 use Cms\Classes\ComponentBase;
 use Cms\Classes\Page;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Session\Store;
 use Illuminate\Validation\Factory;
-use Illuminate\Validation\Rule;
+use InvalidArgumentException;
 use October\Rain\Database\Collection;
 use October\Rain\Flash\FlashBag;
 use Pusher\Pusher;
@@ -124,7 +125,7 @@ class Profile extends ComponentBase
      *
      * {@inheritdoc}
      * @return mixed
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws ModelNotFoundException
      */
     public function onRun()
     {
@@ -137,10 +138,10 @@ class Profile extends ComponentBase
 
     /**
      * @throws ValidationException
-     * @throws \InvalidArgumentException
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws InvalidArgumentException
+     * @throws ModelNotFoundException
      */
-    public function onSaveProfile()
+    public function onSaveProfile(): array
     {
         $this->prepareVars();
 
@@ -159,18 +160,22 @@ class Profile extends ComponentBase
         }
 
         $this->participant->update([
-            'name' => $this->request->get('name'),
+            'name' => preg_replace('/[^[:alnum:][:space:]]/u', '', $this->request->get('name')),
             'default_beverage_id' => $this->request->get('defaultBeverageId')
         ]);
 
-        $this->flashBag->success('Profile has been successfully updated. Yay!');
+        $this->flashBag->success('Profile has been updated.');
+
+        return [
+            '#profileFormElements' => $this->renderPartial($this->alias . '::_form-elements')
+        ];
     }
 
     /**
      * Prepare variables for use in AJAX handlers.
      *
      * @return void
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws ModelNotFoundException
      */
     protected function prepareVars(): void
     {
