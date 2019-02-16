@@ -9,7 +9,6 @@ use Adrenth\CoffeeManager\Models\Participant;
 use Cms\Classes\ComponentBase;
 use Cms\Classes\Page;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Session\Store;
 use October\Rain\Database\Collection;
@@ -108,7 +107,7 @@ class Join extends ComponentBase
 
             return redirect()->to(Page::url($this->property('clientPage')));
         } catch (ModelNotFoundException $e) {
-            $this->flashBag->warning('Select a participant please.');
+            $this->flashBag->warning('Geef aan wie je bent en selecteer jouw koffiegroep.');
         }
     }
 

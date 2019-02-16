@@ -164,7 +164,7 @@ class Profile extends ComponentBase
             'default_beverage_id' => $this->request->get('defaultBeverageId')
         ]);
 
-        $this->flashBag->success('Profile has been updated.');
+        $this->flashBag->success('Jouw profiel is bijgewerkt.');
 
         return [
             '#profileFormElements' => $this->renderPartial($this->alias . '::_form-elements')

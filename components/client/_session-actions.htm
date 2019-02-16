@@ -1,67 +1,37 @@
 {% if not __SELF__.round %}
-    <form class="form-horizontal col-md-12"
-          data-request="{{ __SELF__ ~ '::onInitiateRound' }}"
-          data-request-flash>
-        <div class="row">
-            <div class="col-sm-6">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <form class="form-horizontal"
+                  data-request="{{ __SELF__ ~ '::onInitiateRound' }}"
+                  data-request-flash>
                 <div class="form-group">
-                    <label class="control-label">
-                        Participants must join within:
-                    </label>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="minutes" value="1">1 minute
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="minutes" value="2">2 minutes
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="minutes" value="3" checked>3 minutes
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="minutes" value="4">4 minutes
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="minutes" value="5">5 minutes
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="minutes" value="10">10 minutes
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label class="control-label">
-                        Select your beverage:
-                    </label>
+                    <h3>&ldquo;Wat wil je drinken?&rdquo;</h3>
                     {% partial __SELF__ ~ '::_select-beverage' %}
                 </div>
                 <div class="form-group text-center">
                     <button type="submit"
                             class="btn btn-block btn-primary btn-lg"
                             data-attach-loading>
-                        Initiate Coffee Round
+                        <span class="icon icon-coffee"></span>&nbsp;
+                        Start nieuw koffierondje!
                     </button>
-                    <a class="btn btn-link"
-                            data-request="{{ __SELF__ ~ '::onLeave' }}"
-                            data-request-flash
-                            data-request-loading>
-                        Leave
-                    </a>
                 </div>
-            </div>
+                <br>
+                <br>
+                <br>
+                <div class="form-group form-inline text-center">
+                    <label>
+                    Geef je collega's
+                    <select name="minutes" class="form-control form-control-sm form-inline">
+                        <option value="2">2</option>
+                        <option value="3" selected>3</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                    </select>
+                    minuten om hun drank te kiezen.
+                    </label>
+                </div>
+            </form>
         </div>
-    </form>
-    <hr>
+    </div>
 {% endif %}

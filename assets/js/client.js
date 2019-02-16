@@ -11,7 +11,7 @@ jQuery(document).ready(function () {
 
     channel.bind('participant-initiates-new-round', function (data) {
         if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID) {
-            showNotification(data.participant + ' initiated a new Coffee Round!');
+            showNotification(data.participant + ' heeft een koffierondje gestart!');
         }
         refreshPartials('_session-actions,_round-details,_round-join');
     });
@@ -19,7 +19,7 @@ jQuery(document).ready(function () {
     channel.bind('participant-joined-round', function (data) {
         if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID
             && data.participants.indexOf(COFFEE_MANAGER_PARTICIPANT_ID) !== -1) {
-            showNotification(data.participant + ' joined the Coffee Round!');
+            showNotification(data.participant + ' doet mee!');
         }
         refreshPartials('_round-details');
     });
@@ -27,7 +27,7 @@ jQuery(document).ready(function () {
     channel.bind('participant-left-round', function (data) {
         if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID
             && data.participants.indexOf(COFFEE_MANAGER_PARTICIPANT_ID) !== -1) {
-            showNotification('Unfortunately ' + data.participant + ' left the Coffee Round.');
+            showNotification(data.participant + ' heeft het rondje verlaten.');
         }
         refreshPartials('_round-details');
     });
@@ -35,37 +35,37 @@ jQuery(document).ready(function () {
     channel.bind('round-cancelled', function (data) {
         if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID
             && data.participants.indexOf(COFFEE_MANAGER_PARTICIPANT_ID) !== -1) {
-            showNotification('Coffee Round cancelled by ' + data.participant + '.');
+            showNotification(data.participant + ' heeft het rondje geannuleerd.');
         }
         refreshPartials('_session-actions,_round-details,_round-join');
     });
 
     channel.bind('round-expired', function () {
-        showNotification('Coffee Round has been expired.');
+        showNotification('Koffierondje is verlopen.');
         refreshPartials('_session-actions,_round-details,_round-join');
     });
 
     channel.bind('round-finished', function (data) {
         if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID
             && data.participants.indexOf(COFFEE_MANAGER_PARTICIPANT_ID) !== -1) {
-            showNotification('Coffee Round finished by ' + data.participant + '.');
+            showNotification(data.participant + ' heeft zijn score verhoogd!');
         }
 
         refreshPartials('_session-actions,_participant-details,_round-details,_round-join');
     });
 
     channel.bind('round-finished-automatically', function () {
-        showNotification('Coffee Round has been finished automatically.');
+        showNotification('Het koffierondje is automatisch afgerond.');
         refreshPartials('_session-actions,_participant-details,_round-details,_round-join');
     });
 
     channel.bind('participant-chosen', function (data) {
         if (data.participant_id !== COFFEE_MANAGER_PARTICIPANT_ID) {
             if (data.participants.indexOf(COFFEE_MANAGER_PARTICIPANT_ID) !== -1) {
-                showNotification(data.participant + ' will get your beverage.');
+                showNotification(data.participant + ' gaat je drankje halen.');
             }
         } else {
-            showNotification('You\'re the designated participant!');
+            showNotification('Jij mag de drankjes gaan halen!');
         }
         refreshPartials('_round-details,_round-join');
     });
@@ -80,14 +80,13 @@ jQuery(document).ready(function () {
 
     function itsTheFinalCountDown(clock) {
         clock.countdown(clock.data('date'), function (event) {
-            $(this).html(event.strftime('%M:%S'));
+            $(this).html(event.strftime('%-T'));
         });
     }
 
     function showNotification(body) {
         var n = new Notification('Coffee Manager', {
             body: body,
-            icon: '/plugins/adrenth/coffeemanager/assets/images/coffee.png'
         });
 
         n.onclick = function () {

@@ -1,40 +1,43 @@
 {% if __SELF__.round %}
-    <h4>Current round</h4>
+    <h3>Huidig koffierondje</h3>
 
-    <p>Initiator: {{ __SELF__.round.initiatingParticipant.name }}</p>
+    <p>Op initiatief van {{ __SELF__.round.initiatingParticipant.name }}.</p>
     {% if __SELF__.round.designatedParticipant %}
-        <p>Is finished: {{ __SELF__.round.is_finished ? 'Yes' : 'No' }}</p>
+        <p>Is afgerond: {{ __SELF__.round.is_finished ? 'Ja' : 'Nee' }}</p>
     {% else %}
-        <p>Expires in: <span id="clock" data-date="{{  __SELF__.round.expires_at.format('Y/m/d H:i:s') }}"></span></p>
+        <p>Over <span id="clock" data-date="{{  __SELF__.round.expires_at.format('Y/m/d H:i:s') }}"></span> seconden vindt de loting plaats.</p>
     {% endif %}
 
     {% if __SELF__.round.designatedParticipant %}
+        <div class="alert alert-info">
         {% if __SELF__.round.designatedParticipant.id == __SELF__.participant.id %}
-            <p>Designated participant: You</p>
+            <h4>Jij mag de drankjes gaan halen voor je collega's!</h4>
         {% else %}
-            <p>Designated participant: {{ __SELF__.round.designatedParticipant.name }}</p>
+            <h4>Jouw collega {{ __SELF__.round.designatedParticipant.name }} gaat de drankjes halen.</h4>
         {% endif %}
+        </div>
     {% endif %}
 
-    {% if __SELF__.round.initiatingParticipant.id == __SELF__.participant.id
-        and not __SELF__.round.designatedParticipant %}
-        <button class="btn btn-primary pull-right"
-                data-request="{{ __SELF__ ~ '::onCancelRound' }}"
-                data-request-data="roundId: {{ __SELF__.round.id }}"
-                data-attach-loading>
-            <span class="icon icon-ban-circle"></span> Cancel
-        </button>
-    {% endif %}
-
-    {% if __SELF__.participants.contains('id', __SELF__.participant.id)
-        and not __SELF__.round.designatedParticipant %}
-        <button class="btn btn-danger"
-                data-request="{{ __SELF__ ~ '::onLeaveRound' }}"
-                data-request-data="roundId: {{ __SELF__.round.id }}"
-                data-attach-loading>
-            <span class="icon icon-frown"></span> Leave
-        </button>
-    {% endif %}
+    <div class="pull-right">
+        {% if __SELF__.participants.contains('id', __SELF__.participant.id)
+            and not __SELF__.round.designatedParticipant %}
+            <button class="btn btn-primary"
+                    data-request="{{ __SELF__ ~ '::onLeaveRound' }}"
+                    data-request-data="roundId: {{ __SELF__.round.id }}"
+                    data-attach-loading>
+                Wijzig mijn keuze
+            </button>
+        {% endif %}
+        {% if __SELF__.round.initiatingParticipant.id == __SELF__.participant.id
+            and not __SELF__.round.designatedParticipant %}
+            <button class="btn btn-default"
+                    data-request="{{ __SELF__ ~ '::onCancelRound' }}"
+                    data-request-data="roundId: {{ __SELF__.round.id }}"
+                    data-attach-loading>
+                Annuleer het koffierondje
+            </button>
+        {% endif %}
+    </div>
 
     {% if __SELF__.participants|length > 1
         and not __SELF__.round.designatedParticipant %}
@@ -42,7 +45,7 @@
                 data-request="{{ __SELF__ ~ '::onServeRound' }}"
                 data-request-data="roundId: {{ __SELF__.round.id }}"
                 data-attach-loading>
-            <span class="icon icon-heart"></span> Serve now
+            <span class="icon icon-heart"></span> Ik haal wel
         </button>
     {% endif %}
 
@@ -57,27 +60,18 @@
 
     <div class="clearfix"></div>
 
-    <hr>
-
-    {% if __SELF__.participants|length < 2 %}
-        <p>Waiting for someone to join the round...</p>
-        <hr>
-    {% endif %}
-
+    <h3>Deelnemers</h3>
     {% if __SELF__.participants|length > 1 %}
-    <h4>Participants</h4>
     <table class="table table-bordered table-striped">
         {% for participant in __SELF__.participants %}
             <tr>
-                <td class="col-sm-6">
-                    {{ participant.name }}
-                    {% if participant.id == __SELF__.participant.id %}
-                    <small class="label label-primary">You</small>
-                    {% endif %}
-                </td>
+                <td class="col-sm-6">{{ participant.name }}</td>
                 <td class="col-sm-6">{{ __SELF__.beverages[participant.pivot.beverage_id] }}</td>
             </tr>
         {% endfor %}
     </table>
+    {% endif %}
+    {% if __SELF__.participants|length < 2 %}
+        <p><em>Er zijn nog geen andere deelnemers. Nog even geduld...</em></p>
     {% endif %}
 {% endif %}

@@ -175,6 +175,9 @@ class Client extends ComponentBase
         $this->participants = $this->round
             ? $this->round->participants
             : new Collection();
+
+        $this->page->title = $this->participant->group->getAttribute('name');
+        $this->page->subTitle = $this->participant->getAttribute('name');
     }
 
     /**

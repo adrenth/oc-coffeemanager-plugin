@@ -1,5 +1,18 @@
-<h2>{{ __SELF__.participant.group.name }}</h2>
-<p>
-    {{ __SELF__.participant.name }} [<a href="{{ __SELF__.properties.profilePage|page }}">edit profile</a>], score: {{ __SELF__.participant.score }}
-</p>
+<div class="pull-left">
+    Collegialiteit score: {{ __SELF__.participant.score }}
+</div>
+
+<div class="pull-right">
+    <a href="{{ __SELF__.properties.profilePage|page }}">Profiel bewerken</a>
+    <span>&nbsp;|&nbsp;</span>
+    <a href=":;"
+       data-request="{{ __SELF__ ~ '::onLeave' }}"
+       data-request-flash
+       data-request-loading>
+        Verlaat de groep
+    </a>
+</div>
+
+<div class="clearfix"></div>
+
 <hr>
