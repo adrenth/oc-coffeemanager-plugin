@@ -1,9 +1,12 @@
 <?php
 
+/** @noinspection PhpMissingParentCallCommonInspection */
+
 declare(strict_types=1);
 
 namespace Adrenth\CoffeeManager;
 
+use Adrenth\CoffeeManager\Models\Participant;
 use Adrenth\CoffeeManager\ServiceProviders\CoffeeManager;
 use Backend\Helpers\Backend;
 use Illuminate\Console\Scheduling\Schedule;

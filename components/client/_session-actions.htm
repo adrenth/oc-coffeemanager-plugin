@@ -1,7 +1,7 @@
 {% if not __SELF__.round %}
     <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <form class="form-horizontal"
+        <div class="col-md-6">
+            <form class=""
                   data-request="{{ __SELF__ ~ '::onInitiateRound' }}"
                   data-request-flash>
                 <div class="form-group">
@@ -32,6 +32,28 @@
                     </label>
                 </div>
             </form>
+        </div>
+        <div class="col-md-6">
+            <table class="table">
+                <tr>
+                    <td><strong>Drankje</strong></td>
+                    <td><strong>Gehaald door</strong></td>
+                    <td></td>
+                </tr>
+                {% for participantBeverage in __SELF__.participantBeverages %}
+                <tr>
+                    <td>{{ participantBeverage.beverage.name }}</td>
+                    <td>
+                        {% if participantBeverage.round.designatedParticipant.id == __SELF__.participant.id %}
+                            jou
+                        {% else %}
+                            {{ participantBeverage.round.designatedParticipant.name }}
+                        {% endif %}
+                    </td>
+                    <td class="text-right">{{ participantBeverage.created_at|date('d-m-Y H:i') }}</td>
+                </tr>
+                {% endfor %}
+            </table>
         </div>
     </div>
 {% endif %}
