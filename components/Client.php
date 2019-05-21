@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Adrenth\CoffeeManager\Components;
 
+use Adrenth\CoffeeManager\Classes\BeveragePredictor\BeveragePredictor;
+use Adrenth\CoffeeManager\Classes\BeveragePredictor\MachineLearningPredictor;
 use Adrenth\CoffeeManager\Classes\Exceptions\OngoingRound;
 use Adrenth\CoffeeManager\Classes\RoundHelper;
 use Adrenth\CoffeeManager\Models;
@@ -59,6 +61,11 @@ class Client extends ComponentBase
     public $participants;
 
     /**
+     * @var Models\Beverage|null
+     */
+    public $predictedBeverage;
+
+    /**
      * @var Models\Round
      */
     public $round;
@@ -77,6 +84,11 @@ class Client extends ComponentBase
      * @var Collection
      */
     public $beverageGroups;
+
+    /**
+     * @var BeveragePredictor
+     */
+    private $beveragePredictor;
 
     /**
      * @var Request
@@ -108,6 +120,7 @@ class Client extends ComponentBase
      */
     public function init(): void
     {
+        $this->beveragePredictor = resolve(BeveragePredictor::class);
         $this->request = resolve(Request::class);
         $this->session = resolve(Store::class);
         $this->config = config('coffeemanager');
@@ -170,6 +183,27 @@ class Client extends ComponentBase
     {
         $this->participant = Models\Participant::query()
             ->findOrFail($this->session->get('coffeemanager.participantId'));
+
+
+        // TODO: Limit participant rounds / collect data in some "DataCollector" object which outputs value objects
+
+        $data = [];
+
+        /** @var Models\RoundParticipant $participantRound */
+        foreach ($this->participant->participantRounds as $participantRound) {
+            $data[] = [
+                'sample' => [
+                    $participantRound->getAttribute('created_at')->format('Hi'),
+                    $participantRound->getAttribute('created_at')->format('Hi')
+                ],
+                'label' => $participantRound->getAttribute('beverage_id'),
+            ];
+        }
+
+        $predictedBeverageId = $this->beveragePredictor->predict($data);
+        if ($predictedBeverageId) {
+            $this->predictedBeverage = Models\Beverage::query()->findOrFail($predictedBeverageId);
+        }
 
         $this->round = $this->participant->group->round;
 

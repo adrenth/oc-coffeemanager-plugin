@@ -1,6 +1,13 @@
 {%- spaceless -%}
 <select class="form-control"
         name="beverageId">
+    {%- if __SELF__.predictedBeverage -%}
+        <optgroup label="Voorspeld drankje">
+            <option value="{{ __SELF__.predictedBeverage.id }}">
+                {{- __SELF__.predictedBeverage.name }}
+            </option>
+        </optgroup>
+    {% endif %}
     {%- if __SELF__.participant.defaultBeverage -%}
         <optgroup label="Favoriete drank">
             <option value="{{ __SELF__.participant.defaultBeverage.id }}">
