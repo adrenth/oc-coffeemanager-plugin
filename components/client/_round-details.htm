@@ -1,7 +1,15 @@
 {% if __SELF__.round %}
-    <div class="panel panel-default">
+    <div class="panel {% if __SELF__.round.designatedParticipant %}panel-success{% else %}panel-default{% endif %}">
         <div class="panel-heading">
-            <h4 class="panel-title">Huidig koffierondje</h4>
+            <h4 class="panel-title">
+                {% if __SELF__.round.designatedParticipant.id == __SELF__.participant.id %}
+                    Jij mag de drankjes gaan halen!
+                {% elseif __SELF__.round.designatedParticipant.id %}
+                    {{ __SELF__.round.designatedParticipant.name }} gaat de drankjes halen.
+                {% else %}
+                    Huidig koffierondje
+                {% endif %}
+            </h4>
         </div>
         <div class="panel-body">
             <p>Op initiatief van {{ __SELF__.round.initiatingParticipant.name }}.</p>
@@ -10,19 +18,9 @@
             {% else %}
                 Over <span id="clock" data-date="{{  __SELF__.round.expires_at.format('Y/m/d H:i:s') }}"></span> seconden vindt de loting plaats.
             {% endif %}
-
-            {% if __SELF__.round.designatedParticipant %}
-                <div class="alert alert-info">
-                    {% if __SELF__.round.designatedParticipant.id == __SELF__.participant.id %}
-                        <h4>Cool! Jij mag de drankjes gaan halen!</h4>
-                    {% else %}
-                        <h4>{{ __SELF__.round.designatedParticipant.name }} gaat de drankjes halen.</h4>
-                    {% endif %}
-                </div>
-            {% endif %}
         </div>
         <div class="panel-footer">
-            <div class="btn-group pull-left">
+            <div class="btn-group">
                 {% if __SELF__.participants|length > 1
                     and not __SELF__.round.designatedParticipant %}
                     <button class="btn btn-success"
