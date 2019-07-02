@@ -64,7 +64,7 @@ class Join extends ComponentBase
      */
     public function init()
     {
-        $this->flashBag = resolve(FlashBag::class);
+        $this->flashBag = resolve('flash');
     }
 
     /** @noinspection PhpMissingParentCallCommonInspection */

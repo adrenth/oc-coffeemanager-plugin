@@ -111,7 +111,7 @@ class Client extends ComponentBase
         $this->request = resolve(Request::class);
         $this->session = resolve(Store::class);
         $this->config = config('coffeemanager');
-        $this->flashBag = resolve(FlashBag::class);
+        $this->flashBag = resolve('flash');
         $this->pusher = resolve(Pusher::class);
         $this->redirector = resolve(Redirector::class);
     }
