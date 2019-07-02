@@ -2,7 +2,7 @@
 <select class="form-control"
         name="beverageId">
     {%- if __SELF__.predictedBeverage -%}
-        <optgroup label="Voorspeld drankje">
+        <optgroup label="Verwacht drankje">
             <option value="{{ __SELF__.predictedBeverage.id }}">
                 {{- __SELF__.predictedBeverage.name }}
             </option>
