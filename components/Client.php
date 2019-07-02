@@ -124,7 +124,7 @@ class Client extends ComponentBase
         $this->request = resolve(Request::class);
         $this->session = resolve(Store::class);
         $this->config = config('coffeemanager');
-        $this->flashBag = resolve(FlashBag::class);
+        $this->flashBag = resolve('flash');
         $this->pusher = resolve(Pusher::class);
         $this->redirector = resolve(Redirector::class);
     }
@@ -169,7 +169,7 @@ class Client extends ComponentBase
             return $this->redirector->to(Page::url($this->property('joinPage')));
         }
 
-        $this->controller->addJs('https://js.pusher.com/4.3/pusher.min.js');
+        $this->controller->addJs('https://js.pusher.com/4.4/pusher.min.js');
         $this->controller->addJs('/plugins/adrenth/coffeemanager/assets/js/client.js');
         $this->controller->addJs('/plugins/adrenth/coffeemanager/assets/js/jquery.countdown.min.js');
 
@@ -251,24 +251,10 @@ class Client extends ComponentBase
     {
         $this->prepareVars();
 
-        /** @var Factory $validationFactory */
-        $validationFactory = resolve(Factory::class);
-
-        $validator = $validationFactory->make(
-            $this->request->all(),
-            [
-                'minutes' => 'in:1,2,3,4,5,10'
-            ]
-        );
-
-        if ($validator->fails()) {
-            return [];
-        }
-
         try {
             (new RoundHelper())->initiate(
                 (int) $this->session->get('coffeemanager.participantId'),
-                (int) $this->request->get('minutes', 3),
+                3,
                 (int) $this->request->get('beverageId')
             );
         } catch (OngoingRound $e) {
