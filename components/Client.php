@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Adrenth\CoffeeManager\Components;
 
 use Adrenth\CoffeeManager\Classes\BeveragePredictor\BeveragePredictor;
-use Adrenth\CoffeeManager\Classes\BeveragePredictor\KNearestNeighborsPredictor;
 use Adrenth\CoffeeManager\Classes\Exceptions\OngoingRound;
 use Adrenth\CoffeeManager\Classes\RoundHelper;
 use Adrenth\CoffeeManager\Models;
 use Cms\Classes\ComponentBase;
 use Cms\Classes\Page;
 use Exception;
-use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
