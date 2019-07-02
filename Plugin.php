@@ -1,13 +1,18 @@
 <?php
 
+/** @noinspection PhpMissingParentCallCommonInspection */
+
 declare(strict_types=1);
 
 namespace Adrenth\CoffeeManager;
 
+use Adrenth\CoffeeManager\Models\Participant;
 use Adrenth\CoffeeManager\ServiceProviders\CoffeeManager;
-use Backend;
+use Backend\Helpers\Backend;
+use Illuminate\Console\Scheduling\Schedule;
 use System\Classes\PluginBase;
 use Adrenth\CoffeeManager\Components;
+use Adrenth\CoffeeManager\Console;
 
 /**
  * Class Plugin
@@ -35,6 +40,19 @@ class Plugin extends PluginBase
     public function register(): void
     {
         $this->app->register(CoffeeManager::class);
+
+        $this->registerConsoleCommand('adrenth.coffeemanager.finish-rounds', Console\FinishRounds::class);
+        $this->registerConsoleCommand('adrenth.coffeemanager.serve-rounds', Console\ServeRounds::class);
+    }
+
+    /**
+     * @param Schedule $schedule
+     * @return void
+     */
+    public function registerSchedule($schedule): void
+    {
+        $schedule->command(Console\FinishRounds::class)->everyMinute();
+        $schedule->command(Console\ServeRounds::class)->everyMinute();
     }
 
     /**
@@ -45,6 +63,7 @@ class Plugin extends PluginBase
         return [
             Components\Join::class => 'coffeeManagerJoin',
             Components\Client::class => 'coffeeManagerClient',
+            Components\Profile::class => 'coffeeManagerProfile',
         ];
     }
 
@@ -57,7 +76,7 @@ class Plugin extends PluginBase
             'adrenth.coffeemanager.access_groups' => [
                 'label' => 'Manage Groups',
                 'tab' => 'Coffee Manager',
-                'roles' => ['developer']
+                'roles' => ['developer'],
             ],
             'adrenth.coffeemanager.access_beverage_groups' => [
                 'label' => 'Manage Beverage Groups',
@@ -80,38 +99,41 @@ class Plugin extends PluginBase
     /**
      * {@inheritdoc}
      */
-    public function registerNavigation()
+    public function registerNavigation(): array
     {
+        /** @var Backend $backendHelper */
+        $backendHelper = resolve(Backend::class);
+
         return [
             'coffeemanager' => [
                 'label' => 'Coffee Manager',
-                'url' => Backend::url('adrenth/coffeemanager/groups'),
-                'icon' => 'icon-coffee',
+                'url' => $backendHelper->url('adrenth/coffeemanager/groups'),
+                'iconSvg' => '/plugins/adrenth/coffeemanager/assets/images/coffee.svg',
                 'permissions' => ['adrenth.coffeemanager.*'],
                 'order' => 500,
                 'sideMenu' => [
                     'groups' => [
                         'label' => 'Groups',
                         'icon' => 'icon-sitemap',
-                        'url' => Backend::url('adrenth/coffeemanager/groups'),
+                        'url' => $backendHelper->url('adrenth/coffeemanager/groups'),
                         'permissions' => ['adrenth.coffeemanager.access_groups'],
                     ],
                     'beverage-groups' => [
                         'label' => 'Beverage Groups',
                         'icon' => 'icon-sitemap',
-                        'url' => Backend::url('adrenth/coffeemanager/beveragegroups'),
+                        'url' => $backendHelper->url('adrenth/coffeemanager/beveragegroups'),
                         'permissions' => ['adrenth.coffeemanager.access_beverage_groups'],
                     ],
                     'beverages' => [
                         'label' => 'Beverages',
                         'icon' => 'icon-coffee',
-                        'url' => Backend::url('adrenth/coffeemanager/beverages'),
+                        'url' => $backendHelper->url('adrenth/coffeemanager/beverages'),
                         'permissions' => ['adrenth.coffeemanager.access_beverages'],
                     ],
                     'participants' => [
                         'label' => 'Participants',
                         'icon' => 'icon-users',
-                        'url' => Backend::url('adrenth/coffeemanager/participants'),
+                        'url' => $backendHelper->url('adrenth/coffeemanager/participants'),
                         'permissions' => ['adrenth.coffeemanager.access_participants'],
                     ],
                 ],

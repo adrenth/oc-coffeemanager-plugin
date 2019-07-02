@@ -44,4 +44,4 @@ toolbar:
         prompt: backend::lang.list.search_prompt
 
 # Filter configuration
-# filter: config_filter.yaml
+filter: config_filter.yaml

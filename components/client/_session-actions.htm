@@ -1,0 +1,22 @@
+{% if not __SELF__.round %}
+    <form data-request="{{ __SELF__ ~ '::onInitiateRound' }}"
+          data-request-flash>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">Koffie Manager</h4>
+            </div>
+            <div class="panel-body">
+                <label class="control-label" for="participantId">
+                    Wat wil je drinken?
+                </label>
+                {% partial __SELF__ ~ '::_select-beverage' %}
+            </div>
+        </div>
+        <button type="submit"
+                class="btn btn-block btn-primary btn-lg"
+                data-attach-loading>
+            <span class="icon icon-coffee"></span>&nbsp;
+            Start nieuw koffierondje!
+        </button>
+    </form>
+{% endif %}

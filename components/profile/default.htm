@@ -1,0 +1,23 @@
+<form method="post"
+      data-request="{{ __SELF__ ~ '::onSaveProfile' }}"
+      data-request-flash
+      data-request-validate>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">Mijn profiel</h4>
+        </div>
+        <div class="panel-body" id="profileFormElements">
+            {% partial __SELF__ ~ '::_form-elements' %}
+        </div>
+        <div class="panel-footer">
+            <button type="submit"
+                    class="btn btn-primary"
+                    data-attach-loading>
+                Profiel opslaan
+            </button>
+            <a href="{{ __SELF__.properties.clientPage|page }}" class="btn btn-link pull-right">
+                Ga terug
+            </a>
+        </div>
+    </div>
+</form>

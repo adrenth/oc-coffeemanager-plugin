@@ -1,0 +1,21 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">Koffie Manager</h4>
+    </div>
+    <div class="panel-body">
+        <div class="pull-left">
+            Collegialiteit score: <span class="badge badge-info">{{ __SELF__.participant.score }}</span>
+        </div>
+
+        <div class="pull-right">
+            <a href="{{ __SELF__.properties.profilePage|page }}">Mijn profiel</a>
+            <span>&nbsp;|&nbsp;</span>
+            <a href=":;"
+               data-request="{{ __SELF__ ~ '::onLeave' }}"
+               data-request-flash
+               data-request-loading>
+                Verlaat de groep
+            </a>
+        </div>
+    </div>
+</div>

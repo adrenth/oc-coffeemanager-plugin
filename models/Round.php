@@ -19,8 +19,9 @@ use October\Rain\Database\Relations\BelongsToMany;
  * @mixin Eloquent
  * @property Group group
  * @property Collection participants
- * @method BelongsToMany participants()
  * @property Participant initiatingParticipant
+ * @property Participant designatedParticipant
+ * @method BelongsToMany participants()
  */
 class Round extends Model
 {
@@ -40,11 +41,15 @@ class Round extends Model
     public $belongsTo = [
         'initiatingParticipant' => [
             Participant::class,
-            'key' => 'initiating_participant_id'
+            'key' => 'initiating_participant_id',
+        ],
+        'designatedParticipant' => [
+            Participant::class,
+            'key' => 'designated_participant_id',
         ],
         'group' => [
-            Group::class
-        ]
+            Group::class,
+        ],
     ];
 
     /**
@@ -53,8 +58,19 @@ class Round extends Model
     public $belongsToMany = [
         'participants' => [
             Participant::class,
-            'pivot' => ['beverage_id'],
-            'table' => 'adrenth_coffeemanager_round_participant'
-        ]
+            'pivot' => [
+                'beverage_id',
+                'updated_at',
+                'created_at',
+            ],
+            'table' => 'adrenth_coffeemanager_round_participant',
+        ],
+    ];
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $dates = [
+        'expires_at'
     ];
 }

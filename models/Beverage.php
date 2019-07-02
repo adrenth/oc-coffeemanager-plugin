@@ -32,6 +32,6 @@ class Beverage extends Model
      * {@inheritdoc}
      */
     public $belongsTo = [
-        'group' => BeverageGroup::class
+        'group' => BeverageGroup::class,
     ];
 }

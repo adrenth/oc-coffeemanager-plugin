@@ -1,0 +1,32 @@
+{% spaceless %}
+<div class="form-group">
+    <label class="control-label" for="participantName">
+        Je voornaam:
+    </label>
+    <input type="text"
+           class="form-control"
+           name="name"
+           id="participantName"
+           value="{{ __SELF__.participant.name }}">
+    <span class="help-block text-danger" data-validate-for="name"></span>
+</div>
+<div class="form-group">
+    <label class="control-label" for="participantDefaultBeverage">
+        Favoriete drank:
+    </label>
+    <select class="form-control"
+            id="participantDefaultBeverage"
+            name="defaultBeverageId">
+        {%- for beverageGroup in __SELF__.beverageGroups -%}
+            <optgroup label="{{ beverageGroup.name }}">
+                {%- for beverage in beverageGroup.beverages -%}
+                    <option value="{{ beverage.id }}"
+                            {% if __SELF__.participant.defaultBeverage.id == beverage.id %}selected{% endif %}>
+                        {{- beverage.name -}}
+                    </option>
+                {%- endfor -%}
+            </optgroup>
+        {%- endfor -%}
+    </select>
+</div>
+{% endspaceless %}

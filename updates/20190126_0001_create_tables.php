@@ -58,7 +58,7 @@ class CreateBeveragesTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('group_id');
             $table->string('name');
-            $table->unsignedInteger('round_count')->default(0);
+            $table->unsignedInteger('score')->default(0);
             $table->unsignedInteger('default_beverage_id')->nullable();
             $table->unsignedInteger('last_beverage_id')->nullable();
             $table->timestamps();
@@ -75,10 +75,18 @@ class CreateBeveragesTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('group_id');
             $table->unsignedInteger('initiating_participant_id');
+            $table->unsignedInteger('designated_participant_id')->nullable();
             $table->dateTime('expires_at');
+            $table->boolean('is_finished')->default(false);
             $table->timestamps();
 
             $table->foreign('initiating_participant_id', 'round_initiating_participant')
+                ->references('id')
+                ->on('adrenth_coffeemanager_participants')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
+            $table->foreign('designated_participant_id', 'round_designated_participant')
                 ->references('id')
                 ->on('adrenth_coffeemanager_participants')
                 ->onUpdate('cascade')
@@ -96,6 +104,7 @@ class CreateBeveragesTable extends Migration
             $table->unsignedInteger('round_id');
             $table->unsignedInteger('participant_id');
             $table->unsignedInteger('beverage_id');
+            $table->timestamps();
 
             $table->foreign('round_id', 'round_participant_round')
                 ->references('id')

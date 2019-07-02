@@ -32,6 +32,9 @@ return [
             'title' => 'Manage Beverages',
             'create_button' => 'New Beverage',
         ],
+        'filter' => [
+            'group' => 'Group',
+        ],
     ],
     'groups' => [
         'form' => [
@@ -61,6 +64,11 @@ return [
         'list' => [
             'title' => 'Manage Participants',
             'create_button' => 'New Participant',
+        ],
+        'filter' => [
+            'group' => 'Group',
+            'default_beverage' => 'Default beverage',
+            'last_beverage' => 'Last beverage',
         ],
     ],
 ];

@@ -6,7 +6,7 @@ namespace Adrenth\CoffeeManager\Controllers;
 
 use Backend\Behaviors\FormController;
 use Backend\Behaviors\ListController;
-use BackendMenu;
+use Backend\Classes\NavigationManager;
 use Backend\Classes\Controller;
 
 /** @noinspection ClassOverridesFieldOfSuperClassInspection */
@@ -24,8 +24,8 @@ class Groups extends Controller
 {
     /** {@inheritdoc} */
     public $implement = [
-        'Backend.Behaviors.FormController',
-        'Backend.Behaviors.ListController'
+        FormController::class,
+        ListController::class,
     ];
 
     /** @var string */
@@ -34,8 +34,8 @@ class Groups extends Controller
     /** @var string */
     public $listConfig = 'config_list.yaml';
 
-    // /** {@inheritdoc} */
-    // public $requiredPermissions = ['adrenth.coffeemanager.'];
+     /** {@inheritdoc} */
+     public $requiredPermissions = ['adrenth.coffeemanager.access_groups'];
 
     /**
      * {@inheritdoc}
@@ -44,6 +44,6 @@ class Groups extends Controller
     {
         parent::__construct();
 
-        BackendMenu::setContext('Adrenth.CoffeeManager', 'coffeemanager', 'groups');
+        NavigationManager::instance()->setContext('Adrenth.CoffeeManager', 'coffeemanager', 'groups');
     }
 }

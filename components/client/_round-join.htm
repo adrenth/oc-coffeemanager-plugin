@@ -1,0 +1,22 @@
+{% if __SELF__.round and not __SELF__.round.designatedParticipant %}
+    {% if not __SELF__.participants.contains('id', __SELF__.participant.id) %}
+        <form data-request="{{ __SELF__ ~ '::onJoinRound' }}"
+              data-request-flash>
+            <input type="hidden" name="roundId" value="{{ __SELF__.round.id }}">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Drink mee</h4>
+                </div>
+                <div class="panel-body">
+                    <label class="control-label">
+                        {{ __SELF__.round.initiatingParticipant.name }}: &ldquo;Wat wil je drinken?&rdquo;
+                    </label>
+                    {% partial __SELF__ ~ '::_select-beverage' %}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-block btn-primary btn-lg" data-attach-loading>
+                <span class="icon icon-thumbs-up"></span> Doe mee
+            </button>
+        </form>
+    {% endif %}
+{% endif %}

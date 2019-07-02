@@ -1,0 +1,35 @@
+{%- spaceless -%}
+<select class="form-control"
+        name="beverageId">
+    {%- if __SELF__.predictedBeverage -%}
+        <optgroup label="Verwacht drankje">
+            <option value="{{ __SELF__.predictedBeverage.id }}">
+                {{- __SELF__.predictedBeverage.name }}
+            </option>
+        </optgroup>
+    {% endif %}
+    {%- if __SELF__.participant.defaultBeverage -%}
+        <optgroup label="Favoriete drank">
+            <option value="{{ __SELF__.participant.defaultBeverage.id }}">
+                {{- __SELF__.participant.defaultBeverage.name }}
+            </option>
+        </optgroup>
+    {%- endif -%}
+    {%- if __SELF__.participant.lastBeverage -%}
+        <optgroup label="Jouw laatst gekozen drank">
+            <option value="{{ __SELF__.participant.lastBeverage.id }}">
+                {{- __SELF__.participant.lastBeverage.name }} (last)
+            </option>
+        </optgroup>
+    {%- endif -%}
+    {%- for beverageGroup in __SELF__.beverageGroups -%}
+        <optgroup label="{{ beverageGroup.name }}">
+            {%- for beverage in beverageGroup.beverages -%}
+                <option value="{{ beverage.id }}">
+                    {{- beverage.name -}}
+                </option>
+            {%- endfor -%}
+        </optgroup>
+    {%- endfor -%}
+</select>
+{%- endspaceless -%}
