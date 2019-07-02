@@ -18,6 +18,7 @@ use October\Rain\Database\Model;
  * @property Group group
  * @property Beverage defaultBeverage
  * @property Beverage lastBeverage
+ * @property participantRounds participantRounds
  */
 class Participant extends Model
 {
@@ -38,5 +39,12 @@ class Participant extends Model
         'group' => Group::class,
         'defaultBeverage' => Beverage::class,
         'lastBeverage' => Beverage::class,
+    ];
+
+    /**
+     * {@inheritdoc}
+     */
+    public $hasMany = [
+        'participantRounds' => RoundParticipant::class,
     ];
 }
