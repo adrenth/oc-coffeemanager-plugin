@@ -156,7 +156,7 @@ class Client extends ComponentBase
             return $this->redirector->to(Page::url($this->property('joinPage')));
         }
 
-        $this->controller->addJs('https://js.pusher.com/4.3/pusher.min.js');
+        $this->controller->addJs('https://js.pusher.com/4.4/pusher.min.js');
         $this->controller->addJs('/plugins/adrenth/coffeemanager/assets/js/client.js');
         $this->controller->addJs('/plugins/adrenth/coffeemanager/assets/js/jquery.countdown.min.js');
 
