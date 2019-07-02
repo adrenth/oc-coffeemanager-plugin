@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Adrenth\CoffeeManager\ServiceProviders;
 
 use Adrenth\CoffeeManager\Classes\BeveragePredictor\BeveragePredictor;
-use Adrenth\CoffeeManager\Classes\BeveragePredictor\MachineLearningPredictor;
+use Adrenth\CoffeeManager\Classes\BeveragePredictor\KNearestNeighborsPredictor;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
 use October\Rain\Support\ServiceProvider;
@@ -50,6 +50,6 @@ class CoffeeManager extends ServiceProvider
             );
         });
 
-        $this->app->alias(MachineLearningPredictor::class, BeveragePredictor::class);
+        $this->app->alias(KNearestNeighborsPredictor::class, BeveragePredictor::class);
     }
 }

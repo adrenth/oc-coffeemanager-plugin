@@ -8,11 +8,11 @@ use Carbon\Carbon;
 use Phpml\Classification\KNearestNeighbors;
 
 /**
- * Class MachineLearningPredictor
+ * Class KNearestNeighborsPredictor
  *
  * @package Adrenth\CoffeeManager\Classes\BeveragePredictor
  */
-final class MachineLearningPredictor implements BeveragePredictor
+final class KNearestNeighborsPredictor implements BeveragePredictor
 {
     /**
      * TODO: Cleanup, value objects and thorough testing

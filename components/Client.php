@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Adrenth\CoffeeManager\Components;
 
 use Adrenth\CoffeeManager\Classes\BeveragePredictor\BeveragePredictor;
-use Adrenth\CoffeeManager\Classes\BeveragePredictor\MachineLearningPredictor;
+use Adrenth\CoffeeManager\Classes\BeveragePredictor\KNearestNeighborsPredictor;
 use Adrenth\CoffeeManager\Classes\Exceptions\OngoingRound;
 use Adrenth\CoffeeManager\Classes\RoundHelper;
 use Adrenth\CoffeeManager\Models;
