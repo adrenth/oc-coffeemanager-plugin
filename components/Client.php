@@ -217,24 +217,10 @@ class Client extends ComponentBase
     {
         $this->prepareVars();
 
-        /** @var Factory $validationFactory */
-        $validationFactory = resolve(Factory::class);
-
-        $validator = $validationFactory->make(
-            $this->request->all(),
-            [
-                'minutes' => 'in:1,2,3,4,5,10'
-            ]
-        );
-
-        if ($validator->fails()) {
-            return [];
-        }
-
         try {
             (new RoundHelper())->initiate(
                 (int) $this->session->get('coffeemanager.participantId'),
-                (int) $this->request->get('minutes', 3),
+                3,
                 (int) $this->request->get('beverageId')
             );
         } catch (OngoingRound $e) {
