@@ -1,44 +1,22 @@
 {% if not __SELF__.round %}
-    <div class="row">
-        <div class="col-md-6">
-            <form class=""
-                  data-request="{{ __SELF__ ~ '::onInitiateRound' }}"
-                  data-request-flash>
-                <div class="form-group">
-                    <h3>&ldquo;Wat wil je drinken?&rdquo;</h3>
-                    {% partial __SELF__ ~ '::_select-beverage' %}
-                </div>
-                <div class="form-group text-center">
-                    <button type="submit"
-                            class="btn btn-block btn-primary btn-lg"
-                            data-attach-loading>
-                        <span class="icon icon-coffee"></span>&nbsp;
-                        Start nieuw koffierondje!
-                    </button>
-                </div>
-            </form>
+    <form data-request="{{ __SELF__ ~ '::onInitiateRound' }}"
+          data-request-flash>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">Koffie Manager</h4>
+            </div>
+            <div class="panel-body">
+                <label class="control-label" for="participantId">
+                    Wat wil je drinken?
+                </label>
+                {% partial __SELF__ ~ '::_select-beverage' %}
+            </div>
         </div>
-        <div class="col-md-6">
-            <table class="table">
-                <tr>
-                    <td><strong>Drankje</strong></td>
-                    <td><strong>Gehaald door</strong></td>
-                    <td></td>
-                </tr>
-                {% for participantBeverage in __SELF__.participantBeverages %}
-                <tr>
-                    <td>{{ participantBeverage.beverage.name }}</td>
-                    <td>
-                        {% if participantBeverage.round.designatedParticipant.id == __SELF__.participant.id %}
-                            jou
-                        {% else %}
-                            {{ participantBeverage.round.designatedParticipant.name }}
-                        {% endif %}
-                    </td>
-                    <td class="text-right">{{ participantBeverage.created_at|date('d-m-Y H:i') }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-    </div>
+        <button type="submit"
+                class="btn btn-block btn-primary btn-lg"
+                data-attach-loading>
+            <span class="icon icon-coffee"></span>&nbsp;
+            Start nieuw koffierondje!
+        </button>
+    </form>
 {% endif %}

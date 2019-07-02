@@ -187,25 +187,6 @@ class Client extends ComponentBase
             ? $this->round->participants
             : new Collection();
 
-        $this->participantBeverages = Models\RoundParticipant::query()
-            ->with(['beverage', 'round'])
-            ->whereHas('round', static function (Builder $builder) {
-                $builder->whereNotNull('designated_participant_id');
-            })
-            ->where('participant_id', '=', $this->participant->getKey())
-            ->orderBy('created_at', 'desc')
-            ->limit(10)
-            ->get();
-
-        $this->previousRounds = Models\Round::query()
-            ->with(['initiatingParticipant', 'designatedParticipant'])
-            ->where('group_id', '=', $this->participant->group->getKey())
-            ->where('is_finished', '=', true)
-            ->whereNotNull('designated_participant_id')
-            ->orderBy('created_at', 'desc')
-            ->limit(10)
-            ->get();
-
         $this->page->title = $this->participant->group->getAttribute('name');
         $this->page->subTitle = $this->participant->getAttribute('name');
     }

@@ -1,17 +1,17 @@
 {% spaceless %}
-<div class="form-group">
-    <label class="control-label">
-        Jouw koffiegroep:
-    </label>
-    <select class="form-control"
-            name="participantGroupId"
-            data-attach-loading>
-        <option value="">-- Selecteer koffiegroep --</option>
-        {%- for group in groups -%}
-            <option value="{{ group.id }}"{% if selectedGroupId == group.id %} selected{% endif %}>
-                {{- group.name -}}
-            </option>
-        {%- endfor -%}
-    </select>
-</div>
+    <div class="form-group">
+        <label class="control-label">
+            Jouw koffiegroep:
+        </label>
+        <select class="form-control"
+                name="participantGroupId"
+                data-attach-loading>
+            <option value="">-- Selecteer koffiegroep --</option>
+            {%- for group in groups -%}
+                <option value="{{ group.id }}"{% if selectedGroupId == group.id %} selected{% endif %}>
+                    {{- group.name -}}
+                </option>
+            {%- endfor -%}
+        </select>
+    </div>
 {% endspaceless %}
