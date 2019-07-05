@@ -6,10 +6,10 @@ declare(strict_types=1);
 
 namespace Adrenth\CoffeeManager;
 
-use Adrenth\CoffeeManager\Models\Participant;
 use Adrenth\CoffeeManager\ServiceProviders\CoffeeManager;
 use Backend\Helpers\Backend;
 use Illuminate\Console\Scheduling\Schedule;
+use Laravel\Socialite\SocialiteServiceProvider;
 use System\Classes\PluginBase;
 use Adrenth\CoffeeManager\Components;
 use Adrenth\CoffeeManager\Console;
@@ -40,6 +40,7 @@ class Plugin extends PluginBase
     public function register(): void
     {
         $this->app->register(CoffeeManager::class);
+        $this->app->register(SocialiteServiceProvider::class);
 
         $this->registerConsoleCommand('adrenth.coffeemanager.finish-rounds', Console\FinishRounds::class);
         $this->registerConsoleCommand('adrenth.coffeemanager.serve-rounds', Console\ServeRounds::class);
