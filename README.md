@@ -21,4 +21,24 @@ COFFEE_MANAGER_PUSHER_APP_ID = ""
 COFFEE_MANAGER_PUSHER_CLUSTER = "eu"
 ```
 
-Session time
+### Socialite Configuration
+
+Add the Google service to `services.php`:
+
+```
+'google' => [
+    'client_id' => env('GOOGLE_CLIENT_ID'),
+    'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+    'redirect' => env('GOOGLE_REDIRECT'),
+],
+```
+
+Add these environment variables to the `.env` file of your project:
+
+```
+GOOGLE_CLIENT_ID=xxxxxxx.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=
+GOOGLE_REDIRECT=https://xxxxx.xxx/google/callback
+```
+
+TODO: Configuring Google API

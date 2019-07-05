@@ -12,6 +12,7 @@
     ],
     "require": {
         "php": ">=7.1",
+        "laravel/socialite": "^3.0",
         "php-ai/php-ml": "^0.7",
         "pusher/pusher-php-server": "^3.3"
     }
