@@ -45,6 +45,20 @@ class CreateBeveragesTable extends Migration
                  ->onDelete('cascade');
         });
 
+        Schema::create('adrenth_coffeemanager_beverage_properties', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+            $table->increments('id');
+            $table->unsignedInteger('beverage_id');
+            $table->string('name');
+            $table->timestamps();
+
+            $table->foreign('beverage_id', 'beverage')
+                ->references('id')
+                ->on('adrenth_coffeemanager_beverages')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+        });
+
         Schema::create('adrenth_coffeemanager_groups', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');

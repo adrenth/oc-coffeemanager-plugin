@@ -15,6 +15,7 @@ use October\Rain\Database\Model;
  *
  * @package Adrenth\CoffeeManager\Models
  * @mixin Eloquent
+ * @property BeverageProperty[] properties
  */
 class Beverage extends Model
 {
@@ -27,6 +28,17 @@ class Beverage extends Model
      * {@inheritdoc}
      */
     protected $guarded = [];
+
+    /**
+     * {@inheritdoc}
+     */
+    public $hasMany = [
+        'properties' => [
+            BeverageProperty::class,
+            'key' => 'beverage_id',
+            'order' => 'name',
+        ],
+    ];
 
     /**
      * {@inheritdoc}
